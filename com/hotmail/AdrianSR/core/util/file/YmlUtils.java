@@ -1,5 +1,8 @@
 package com.hotmail.AdrianSR.core.util.file;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.Configuration;
@@ -50,6 +53,20 @@ public final class YmlUtils {
 	
 	public static String getFixPathSeparator(Configuration section, String key) {
 		return key.replace('.', section.options().pathSeparator());
+	}
+	
+	/**
+	 * Gets all the sub-{@link ConfigurationSection} within the given {@link ConfigurationSection}.
+	 * <p>
+	 * @param section the {@link ConfigurationSection} where the sub-sections are stored.
+	 * @return all sub-sections within the given section.
+	 */
+	public static Set<ConfigurationSection> getSubConfigurationSections(ConfigurationSection section) {
+		Set<ConfigurationSection> sections = new HashSet<>();
+		section.getKeys(false).stream()
+				.filter(key -> section.isConfigurationSection(key))
+				.forEach(key -> sections.add(section.getConfigurationSection(key)));
+		return sections;
 	}
 	
 	/**

@@ -11,9 +11,7 @@ import org.bukkit.World;
 import org.bukkit.WorldBorder;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
 
 import com.hotmail.AdrianSR.core.riding.util.StandBlockFace;
 import com.hotmail.AdrianSR.core.util.classes.ReflectionUtils;
@@ -176,13 +174,13 @@ public class LocationUtils {
 	 * @return a list with circle locations.
 	 */
 	public static ArrayList<Location> getCircle(Location center, double radius, int amount) {
-		World world = center.getWorld();
-		double increment = (2 * Math.PI) / amount;
+		World      world = center.getWorld();
+		double increment = ( 2 * Math.PI ) / amount;
 		ArrayList<Location> locations = new ArrayList<Location>();
 		for (int i = 0; i < amount; i++) {
 			double angle = i * increment;
-			double x = center.getX() + (radius * Math.cos(angle));
-			double z = center.getZ() + (radius * Math.sin(angle));
+			double     x = center.getX() + (radius * Math.cos(angle));
+			double     z = center.getZ() + (radius * Math.sin(angle));
 			locations.add(new Location(world, x, center.getY(), z));
 		}
 		return locations;
@@ -232,59 +230,6 @@ public class LocationUtils {
 			}
 		}
 		return locations;
-	}
-	
-	/**
-	 * Point a location to another location.
-	 * <p>
-	 * @param fromLocation the location from.
-	 * @param to the target location.
-	 * @return the calculated Yaw.
-	 */
-	public static float pointLocationTo(final Location fromLocation, final Location to) {
-		double xDiff = ( to.getX() - fromLocation.getX() ); // the difference between the X axis
-		double zDiff = ( to.getZ() - fromLocation.getZ() ); // the difference between the Z axis
-
-		// distance between the two locations, but excluding the distance in the axis Y
-		double distanceXZ = Math.sqrt(xDiff * xDiff + zDiff * zDiff); 
-		double        yaw = Math.toDegrees(Math.acos(xDiff / distanceXZ));
-		
-		if (zDiff < 0.0D) {
-			yaw += ( Math.abs(180.0D - yaw) * 2.0D );
-		}
-		return (float) (yaw - 90.0F);
-	}
-	
-	/**
-	 * Make entity look to location.
-	 * 
-	 * @param entity the entity to make.
-	 * @param to the target location.
-	 * @return the location to look.
-	 */
-	public static Location entityLookToLocation(Entity entity, Location to) {
-		if (entity.getWorld() != to.getWorld()) {
-			return null;
-		}
-
-		final Location fromLocation = entity.getLocation();
-		double xDiff = (to.getX() - fromLocation.getX());
-		double yDiff = (to.getY() - fromLocation.getY());
-		double zDiff = (to.getZ() - fromLocation.getZ());
-
-		double distanceXZ = Math.sqrt(xDiff * xDiff + zDiff * zDiff);
-		double distanceY = Math.sqrt(distanceXZ * distanceXZ + yDiff * yDiff);
-
-		double yaw = Math.toDegrees(Math.acos(xDiff / distanceXZ));
-		double pitch = (Math.toDegrees(Math.acos(yDiff / distanceY)) - 90.0D);
-		if (zDiff < 0.0D) {
-			yaw += (Math.abs(180.0D - yaw) * 2.0D);
-		}
-
-		Location loc = entity.getLocation();
-		loc.setYaw((float) (yaw - 90.0F));
-		loc.setPitch((float) (pitch - 90.0F));
-		return loc;
 	}
 	
 	public static boolean isInsideOfBorder(final Player p, final WorldBorder border) {
@@ -368,43 +313,4 @@ public class LocationUtils {
 	public static void add(final Location location, final StandBlockFace face, double num) {
 		location.add(face.getModX() * num, face.getModY() * num, face.getModZ() * num);
 	}
-	
-	/**
-	 * Rotate a {@link Vector}.
-	 * 
-	 * @param vector the Vector to rotate.
-	 * @param yawDegrees the yaw degress.
-	 * @param pitchDegrees the pitch degress.
-	 * @return a new rotated Vector.
-	 */
-	public static final Vector rotateVector(Vector vector, float yawDegrees, float pitchDegrees) {
-		// get radians.
-        double   yaw = Math.toRadians(-yawDegrees);
-        double pitch = Math.toRadians(-pitchDegrees);
-
-        // get yaw/pitch sine and cosine.
-        double cosYaw   = Math.cos(yaw);
-        double cosPitch = Math.cos(pitch);
-        double sinYaw   = Math.sin(yaw);
-        double sinPitch = Math.sin(pitch);
-
-        // axis.
-        double initialX, initialY, initialZ;
-        double x, y, z;
-
-        // Z_axis rotation (Pitch)
-        initialX = vector.getX();
-        initialY = vector.getY();
-        x        = initialX * cosPitch - initialY * sinPitch;
-        y        = initialX * sinPitch + initialY * cosPitch;
-
-        // Y_axis rotation (Yaw)
-        initialZ = vector.getZ();
-        initialX = x;
-        z        = initialZ * cosYaw - initialX * sinYaw;
-        x        = initialZ * sinYaw + initialX * cosYaw;
-        
-        // return a new vector with calculated axis.
-        return new Vector(x, y, z);
-    }
 }

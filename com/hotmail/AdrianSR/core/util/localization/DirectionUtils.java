@@ -17,6 +17,7 @@ import org.bukkit.util.Vector;
  */
 public class DirectionUtils {
 	
+	// norte, este, sur, oeste
 	/**
 	 * The Global 90° BlockFaces.
 	 */
@@ -29,11 +30,23 @@ public class DirectionUtils {
 	 * @return the yaw BlockFace direction.
 	 */
 	public static BlockFace getFacingDirection(float yaw) {
-		int index = (int) Math.round((wrapAngle(yaw) + 180.0F) / 90.0D);
+		int index = (int) Math.round( ( wrapAngle(yaw) + 180.0F ) / 90.0D );
 		if (index > 3) {
 			index = 0;
 		}
 		return FACES_90[index];
+	}
+	
+	public static float wrapAngle(float angle) {
+		float wrappedAngle = angle;
+		while (wrappedAngle <= -180.0F) {
+			wrappedAngle += 360.0F;
+		}
+
+		while (wrappedAngle > 180.0F) {
+			wrappedAngle -= 360.0F;
+		}
+		return wrappedAngle;
 	}
 	
 	/**
@@ -121,19 +134,6 @@ public class DirectionUtils {
 		}
 	}
 
-	public static float wrapAngle(float angle) {
-		float wrappedAngle = angle;
-		while (wrappedAngle <= -180.0F) {
-			wrappedAngle += 360.0F;
-		}
-
-		while (wrappedAngle > 180.0F) {
-			wrappedAngle -= 360.0F;
-		}
-
-		return wrappedAngle;
-	}
-	
 	/**
 	 * Resolve a yaw, setting
 	 * it between 0 and 360.
@@ -142,7 +142,7 @@ public class DirectionUtils {
 	 * @return resolved yaw.
 	 */
 	public static float resolveTo360(final float yaw) {
-		return (yaw + 360) % 360;
+		return ( yaw + 360 ) % 360;
 	}
 	
 	/**
@@ -316,4 +316,104 @@ public class DirectionUtils {
 		vector.setZ(xz * Math.cos(Math.toRadians(yaw)));
 		return vector;
 	}
+	
+	public static float degreesAddition(float degrees, float addition) {
+		return ( ( degrees + addition ) % 360 );
+	}
+	
+	public static float degreesSubtraction(float degrees, float subtraction) {
+		return ( ( degrees - subtraction ) % 360 );
+	}
+	
+	/**
+	 * Point a location to another location.
+	 * <p>
+	 * @param fromLocation the location from.
+	 * @param to the target location.
+	 * @return the calculated Yaw.
+	 */
+	public static float pointLocationTo(final Location fromLocation, final Location to) {
+		/* calculating the distance, ( axis X and Z ) */
+		double      x_diff = ( to.getX() - fromLocation.getX() ); // the difference between the X axis
+		double      z_diff = ( to.getZ() - fromLocation.getZ() ); // the difference between the Z axis
+		double distance_xz = Math.sqrt( ( x_diff * x_diff ) + ( z_diff * z_diff ) ); 
+		
+		/* calculating yaw using the calculated distance, ( axis X and Z) */
+		double yaw = Math.toDegrees( Math.acos( x_diff / distance_xz ) );
+		if (z_diff < 0.0D) {
+			yaw += ( Math.abs( 180.0D - yaw ) * 2.0D );
+		}
+		return (float) ( yaw - 90.0F );
+	}
+	
+	/**
+	 * Make entity look to location.
+	 * 
+	 * @param entity the entity to make.
+	 * @param to the target location.
+	 * @return the location to look.
+	 */
+	public static Location entityLookToLocation(Entity entity, Location to) {
+		if (entity.getWorld() != to.getWorld()) {
+			return null;
+		}
+
+		final Location fromLocation = entity.getLocation();
+		double xDiff = (to.getX() - fromLocation.getX());
+		double yDiff = (to.getY() - fromLocation.getY());
+		double zDiff = (to.getZ() - fromLocation.getZ());
+
+		double distanceXZ = Math.sqrt(xDiff * xDiff + zDiff * zDiff);
+		double distanceY = Math.sqrt(distanceXZ * distanceXZ + yDiff * yDiff);
+
+		double yaw = Math.toDegrees(Math.acos(xDiff / distanceXZ));
+		double pitch = (Math.toDegrees(Math.acos(yDiff / distanceY)) - 90.0D);
+		if (zDiff < 0.0D) {
+			yaw += (Math.abs(180.0D - yaw) * 2.0D);
+		}
+
+		Location loc = entity.getLocation();
+		loc.setYaw((float) (yaw - 90.0F));
+		loc.setPitch((float) (pitch - 90.0F));
+		return loc;
+	}
+	
+	/**
+	 * Rotate a {@link Vector}.
+	 * 
+	 * @param vector the Vector to rotate.
+	 * @param yawDegrees the yaw degress.
+	 * @param pitchDegrees the pitch degress.
+	 * @return a new rotated Vector.
+	 */
+	public static final Vector rotateVector(Vector vector, float yawDegrees, float pitchDegrees) {
+		// get radians.
+        double   yaw = Math.toRadians(-yawDegrees);
+        double pitch = Math.toRadians(-pitchDegrees);
+
+        // get yaw/pitch sine and cosine.
+        double cosYaw   = Math.cos(yaw);
+        double cosPitch = Math.cos(pitch);
+        double sinYaw   = Math.sin(yaw);
+        double sinPitch = Math.sin(pitch);
+
+        // axis.
+        double initialX, initialY, initialZ;
+        double x, y, z;
+
+        // Z_axis rotation (Pitch)
+        initialX = vector.getX();
+        initialY = vector.getY();
+        x        = initialX * cosPitch - initialY * sinPitch;
+        y        = initialX * sinPitch + initialY * cosPitch;
+
+        // Y_axis rotation (Yaw)
+        initialZ = vector.getZ();
+        initialX = x;
+        z        = initialZ * cosYaw - initialX * sinYaw;
+        x        = initialZ * sinYaw + initialX * cosYaw;
+        
+        // return a new vector with calculated axis.
+        return new Vector(x, y, z);
+    }
 }

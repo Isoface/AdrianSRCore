@@ -24,6 +24,7 @@ import com.hotmail.AdrianSR.core.main.CustomPlugin;
 import com.hotmail.AdrianSR.core.util.Schedulers;
 import com.hotmail.AdrianSR.core.util.UpdatableEntity;
 import com.hotmail.AdrianSR.core.util.classes.ReflectionUtils;
+import com.hotmail.AdrianSR.core.util.localization.DirectionUtils;
 import com.hotmail.AdrianSR.core.util.localization.LocationUtils;
 import com.hotmail.AdrianSR.core.util.version.ServerVersion;
 
@@ -440,12 +441,12 @@ public class Movable {
 //				Location dest = new Location(world, (x + difX), Y, (z + difZ), Yaw, 0.0F);
 				
 				// get diference beetwen yaws.
-				float lookYaw = LocationUtils.pointLocationTo(mainSpawn, partSpawn);
+				float lookYaw = DirectionUtils.pointLocationTo(mainSpawn, partSpawn);
 				float grados  = (lookYaw < 0 ? (360.0F - Math.abs(lookYaw)) : lookYaw);
 				float dife    = ((grados + addedYaw) - yaw);
 				
 				// get direction.
-				Vector locationDirection = LocationUtils.rotateVector(from.getDirection(), dife, 0F);
+				Vector locationDirection = DirectionUtils.rotateVector(from.getDirection(), dife, 0F);
 				
 				// get distance excluding axis Y.
 				double distanceSquared = NumberConversions.square(difX) + NumberConversions.square(difZ);
