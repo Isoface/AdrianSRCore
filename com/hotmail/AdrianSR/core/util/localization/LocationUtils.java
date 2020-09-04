@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang.reflect.FieldUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldBorder;

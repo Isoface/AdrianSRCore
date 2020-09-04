@@ -9,7 +9,7 @@ import org.bukkit.Utility;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 
-import com.hotmail.AdrianSR.core.util.UniversalMaterial;
+import com.hotmail.AdrianSR.core.util.classes.ReflectionUtils;
 import com.hotmail.AdrianSR.core.util.itemstack.ItemStackUtils;
 import com.hotmail.AdrianSR.core.util.itemstack.custom.CustomItemStack;
 
@@ -22,9 +22,8 @@ import com.hotmail.AdrianSR.core.util.itemstack.custom.CustomItemStack;
  */
 @SuppressWarnings("deprecation") public final class WoolItemStack extends CustomItemStack {
 	
-	public static final WoolColor         DEFAULT_COLOR = WoolColor.WHITE;
-	public static final Material   WOOL_ITEM_STACK_TYPE = Material.valueOf("WOOL"); // UniversalMaterial.WHITE_WOOL.getMaterial();
-	public static final boolean WOOL_COLOR_SET_BY_SHORT = ( Material.matchMaterial("WHITE_WOOL") == null );
+	public static final WoolColor       DEFAULT_COLOR = WoolColor.WHITE;
+	public static final Material WOOL_ITEM_STACK_TYPE = Material.valueOf ( "WOOL" );
 	
     @Utility
     public WoolItemStack() {
@@ -97,10 +96,14 @@ import com.hotmail.AdrianSR.core.util.itemstack.custom.CustomItemStack;
      */
     public void setColor(WoolColor color) {
 		Validate.notNull(color, "Color cannot be null");
-		if (WOOL_COLOR_SET_BY_SHORT) { /* setting color by changing the durability */
-			rawSetDurability(color.getShortValue());
-		} else { /* setting color by changing the item stack type */
-			super.setType(UniversalMaterial.valueOf( (color.name() + "_WOOL") ).getMaterial());
+		
+		Material wool_material = ReflectionUtils.getEnumConstant ( Material.class , color.name ( ) + "_WOOL" );
+		if ( wool_material == null ) {
+			// we are setting color by changing the durability-
+			rawSetDurability ( color.getShortValue ( ) );
+		} else {
+			// we are setting the color by changing the type.
+			super.setType ( wool_material );
 		}
 	}
     

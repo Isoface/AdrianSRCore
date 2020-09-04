@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
@@ -22,7 +23,7 @@ import com.hotmail.AdrianSR.core.util.TextUtils;
 
 /**
  * Represents a Simple Scoreboard that allows developers to add/insert/clear
- * elements to/from the its view.
+ * elements to/from its view.
  * <p>
  * @author AdrianSR / Monday 04 November, 2019 / 08:10 PM
  */
@@ -34,7 +35,6 @@ public class CustomScoreboard {
 	public static final int     MAX_ELEMENTS_LENGTH = 40;
 	public static final String WHITESPACE_INDICATOR = "{//}";
 	
-	
 	private final Set<Player> viewers = new HashSet<>();
 	private final String[]   elements = new String[MAX_ELEMENTS];
 	
@@ -42,11 +42,12 @@ public class CustomScoreboard {
 	private final Objective objective;
 	
 	@SuppressWarnings("deprecation")
-	public CustomScoreboard(String name, String... initial_elements) {
-		Validate.notNull(name, "The name cannot be null!");
+	public CustomScoreboard ( String name , String... initial_elements ) {
 		this.handle    = Bukkit.getScoreboardManager().getNewScoreboard();
-		this.objective = handle.registerNewObjective(TextUtils.getShortenString(TextUtils.stripColors(name), MAX_NAME_LENGTH), "milo");
-		this.objective.setDisplayName(TextUtils.getShortenString(TextUtils.translateColors(name), MAX_DISPLAYNAME_LENGTH));
+		this.objective = handle.registerNewObjective(TextUtils.getShortenString(
+				TextUtils.stripColors(TextUtils.getNotNull( UUID.randomUUID().toString() , "" )), MAX_NAME_LENGTH), "milo");
+		this.objective.setDisplayName(TextUtils.getShortenString(TextUtils.translateColors ( 
+				( name == null || name.isEmpty ( ) ) ? "" + " " : name ), MAX_DISPLAYNAME_LENGTH));
 		this.objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 		
 		if (initial_elements != null) {

@@ -1444,13 +1444,13 @@ public enum UniversalMaterial {
     // 4 = 1.12.2
     // 5 = 1.13.2
     // 6 = 1.14.3
-    private String setupVersionName() {
+    private String setupVersionName ( ) {
         final int ver = version.contains("1.8") ? 0 : version.contains("1.9") ? 1 
         		: version.contains("1.10") ? 2 : version.contains("1.11") ? 3 
         		: version.contains("1.12") ? 4 : version.contains("1.13") ? 5 
         		: version.contains("1.14") ? 6 : names.length-1;
 		int realver = ( names.length <= ver ? names.length - 1 : ver );
-		if (names[realver] == null) {
+		if ( names [ realver ] == null ) {
 			boolean did = false;
 			for (int i = realver; i >= 0; i--) {
 				if (!did && names[i] != null) {
@@ -1463,9 +1463,18 @@ public enum UniversalMaterial {
 		return t != null ? t : t2;
 	}
     
-    public Material getMaterial() {
-        final String i = getVersionName();
-        return i != null ? Material.matchMaterial(i) : null;
+    public Material getMaterial ( ) {
+    	Material match = Material.matchMaterial ( getVersionName ( ) );
+    	if ( match == null ) {
+    		for ( String name : names ) {
+    			if ( name != null && ( match = Material.matchMaterial ( name ) ) != null ) {
+    				return match;
+    			}
+    		}
+    		return null;
+    	} else {
+    		return match;
+    	}
     }
     
     public static ItemStack getEnchantmentBook(Enchantment enchant, int level, int amount) {

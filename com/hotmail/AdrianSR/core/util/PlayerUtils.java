@@ -1,8 +1,8 @@
 package com.hotmail.AdrianSR.core.util;
 
-import java.util.concurrent.TimeUnit;
-
 import org.bukkit.entity.Player;
+
+import com.hotmail.AdrianSR.core.main.core.AdrianSRCore;
 
 /**
  * An useful class for handling any {@link Player}.
@@ -40,28 +40,31 @@ public class PlayerUtils {
 				: prefix.getPowerfulPermsPrefix() != null ? prefix.getPowerfulPermsPrefix()
 						: prefix.getUltraPermissionsPrefix() != null ? prefix.getUltraPermissionsPrefix() : null;
 	}
-	
-	// TODO: TEST
-    /**
-     * Sets whether the entity is invulnerable or not.
-     * <p>
-     * When an entity is invulnerable it can only be damaged by players in
-     * creative mode.
-     * <p>
-     * @param ticks the invulnerable time in server ticks.
-     */
-	public static void setInvulnerable(final Player player, long ticks) {
-		if (isValid(player)) {
-			player.setInvulnerable(true);
-			new Thread(() -> {
-				try {
-					long seconds = ( ticks / 20 ); // from server ticks to seconds
-					Thread.sleep( TimeUnit.SECONDS.toMillis( seconds ) );
-				} catch (Exception e) {
-					/* ignore */
-				}
-				player.setInvulnerable(false);
-			}).start();
-		}
+
+	/**
+	 * Sets the desired player as invulnerable for a specified time (in server
+	 * ticks).
+	 * <p>
+	 * When an entity is invulnerable it can only be damaged by players in creative
+	 * mode.
+	 * <p>
+	 * @param ticks the invulnerable time in server ticks.
+	 */
+	public static void setInvulnerable ( final Player player , long ticks ) {
+		player.setInvulnerable ( true );
+		Schedulers.scheduleSync ( new Runnable ( ) {
+			@Override public void run ( ) {
+				player.setInvulnerable ( false );
+			}
+		} , (int) ticks , AdrianSRCore.getInstance ( ) );
+//		new Thread(() -> {
+//			try {
+//				long seconds = ( ticks / 20 ); // from server ticks to seconds
+//				Thread.sleep( TimeUnit.SECONDS.toMillis( seconds ) );
+//			} catch (Exception e) {
+//				/* ignore */
+//			}
+//			player.setInvulnerable(false);
+//		}).start();
 	}
 }

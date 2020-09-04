@@ -225,4 +225,27 @@ public class Duration {
 	public boolean isZero() {
 		return ZERO.equals(this);
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (duration ^ (duration >>> 32));
+		result = prime * result + ((unit == null) ? 0 : unit.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals ( Object obj ) {
+		if ( obj == this ) {
+			return true;
+		} else {
+			if ( obj instanceof Duration ) {
+				Duration other = (Duration) obj;
+				return other.duration == duration 
+						&& unit == other.unit;
+			}
+			return false;
+		}
+	}
 }

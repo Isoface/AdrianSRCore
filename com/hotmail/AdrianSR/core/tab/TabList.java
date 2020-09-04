@@ -1,6 +1,6 @@
 package com.hotmail.AdrianSR.core.tab;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 
 import com.hotmail.AdrianSR.core.main.CustomPlugin;

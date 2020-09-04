@@ -1,5 +1,7 @@
 package com.hotmail.AdrianSR.core.util.localization;
 
+import java.util.Objects;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -21,7 +23,7 @@ import com.hotmail.AdrianSR.core.util.file.YmlUtils;
 public class Loc implements Cloneable {
 	
 	// fields.
-	private Number x, y, z;
+	private double x, y, z;
 	private float pitch, yaw;
 	private String world;
 	private BlockFace direction;
@@ -41,9 +43,9 @@ public class Loc implements Cloneable {
 			pitch = loc.getPitch();
 			yaw   = loc.getYaw();
 		} else {
-			x     = loc.getBlockX();
-			y     = loc.getBlockY();
-			z     = loc.getBlockZ();
+			x     = (double) loc.getBlockX();
+			y     = (double) loc.getBlockY();
+			z     = (double) loc.getBlockZ();
 			pitch = 0;
 			yaw   = 0;
 		}
@@ -66,7 +68,7 @@ public class Loc implements Cloneable {
 	 * @param y is the coord Y.
 	 * @param z is the coord Z.
 	 */
-	public Loc(String world, Number x, Number y, Number z) {
+	public Loc(String world, double x, double y, double z) {
 		this(world, x, y, z, 0, 0);
 	}
 
@@ -80,7 +82,7 @@ public class Loc implements Cloneable {
 	 * @param pitch is the coord pitch.
 	 * @param yaw is the coord yaw.
 	 */
-	public Loc(String world, Number x, Number y, Number z, float pitch, float yaw) {
+	public Loc(String world, double x, double y, double z, float pitch, float yaw) {
 		this.world = world;
 		this.x = x;
 		this.y = y;
@@ -105,20 +107,17 @@ public class Loc implements Cloneable {
 		direction = ReflectionUtils.getEnumConstant(BlockFace.class, TextUtils.getNotNull(section.getString("FaceDirection"), ""));
 		
 		// load coords.
-		for (String prf : new String[] {"X", "Y", "Z"}) {
-			// get numb.
-			Number numb = section.isDouble(prf) ? section.getDouble(prf) : section.getInt(prf);
-			
-			// set value.
-			switch(prf) {
+		for ( String prf : new String [ ] { "X", "Y", "Z" } ) {
+			double value = section.getDouble  ( prf );
+			switch ( prf ) {
 			case "X":
-				x = numb;
+				x = value;
 				break;
 			case "Y":
-				y = numb;
+				y = value;
 				break;
 			case "Z":
-				z = numb;
+				z = value;
 				break;
 			}
 		}
@@ -127,43 +126,43 @@ public class Loc implements Cloneable {
 	/**
 	 * @return x.
 	 */
-	public double getX() {
-		return x.doubleValue();
+	public double getX ( ) {
+		return x;
 	}
 
 	/**
 	 * @return block X.
 	 */
-	public int getBlockX() {
-		return x.intValue();
+	public int getBlockX ( ) {
+		return Location.locToBlock ( x );
 	}
 	
 	/**
 	 * @return get y.
 	 */
-	public double getY() {
-		return y.doubleValue();
+	public double getY ( ) {
+		return y;
 	}
 
 	/**
 	 * @return block Y.
 	 */
-	public int getBlockY() {
-		return y.intValue();
+	public int getBlockY ( ) {
+		return Location.locToBlock ( y );
 	}
 	
 	/**
 	 * @return get z.
 	 */
-	public double getZ() {
-		return z.doubleValue();
+	public double getZ ( ) {
+		return z;
 	}
 
 	/**
 	 * @return block Z.
 	 */
-	public int getBlockZ() {
-		return z.intValue();
+	public int getBlockZ ( ) {
+		return Location.locToBlock ( z );
 	}
 	
 	/**
@@ -240,9 +239,9 @@ public class Loc implements Cloneable {
 			throw new IllegalArgumentException("Cannot measure distance to a null location");
 		}
 
-		return NumberConversions.square(x.doubleValue() - o.x.doubleValue())
-				+ NumberConversions.square(y.doubleValue() - o.y.doubleValue())
-				+ NumberConversions.square(z.doubleValue() - o.z.doubleValue());
+		return NumberConversions.square(x - o.x)
+				+ NumberConversions.square(y - o.y)
+				+ NumberConversions.square(z - o.z);
 	}
     
 	public double distanceSquaredExcludingX(Loc o) {
@@ -250,8 +249,8 @@ public class Loc implements Cloneable {
 			throw new IllegalArgumentException("Cannot measure distance to a null location");
 		}
 
-		return NumberConversions.square(y.doubleValue() - o.y.doubleValue())
-				+ NumberConversions.square(z.doubleValue() - o.z.doubleValue());
+		return NumberConversions.square(y - o.y)
+				+ NumberConversions.square(z - o.z);
 	}
 
 	public double distanceSquaredExcludingY(Loc o) {
@@ -259,8 +258,8 @@ public class Loc implements Cloneable {
 			throw new IllegalArgumentException("Cannot measure distance to a null location");
 		}
 
-		return NumberConversions.square(x.doubleValue() - o.x.doubleValue())
-				+ NumberConversions.square(z.doubleValue() - o.z.doubleValue());
+		return NumberConversions.square(x - o.x)
+				+ NumberConversions.square(z - o.z);
 	}
 
 	public double distanceSquaredExcludingZ(Loc o) {
@@ -268,25 +267,21 @@ public class Loc implements Cloneable {
 			throw new IllegalArgumentException("Cannot measure distance to a null location");
 		}
 
-		return NumberConversions.square(x.doubleValue() - o.x.doubleValue())
-				+ NumberConversions.square(y.doubleValue() - o.y.doubleValue());
+		return NumberConversions.square(x - o.x)
+				+ NumberConversions.square(y - o.y);
 	}
 	
 	/**
-	 * Get a bukkit location from this.
-	 * 
-	 * @return a bukkit location from this coords.
+	 * Gets the equivalent Bukkit location.
+	 * <p>
+	 * @return equivalent Bukkit location, or null if <code>{@link #world} == null</code>.
 	 */
 	public Location toLocation() {
-		// check ejes.
-		if (world == null || x == null || y == null || z == null) {
-			return null;
-		}
-		return new Location(getBukkitWorld(), x.doubleValue(), y.doubleValue(), z.doubleValue(), yaw, pitch);
+		return world != null ? new Location ( getBukkitWorld ( ) , x , y , z , yaw , pitch ) : null;
 	}
 	
 	public Vector3d toVector3d() {
-		return new Vector3d(x.doubleValue(), y.doubleValue(), z.doubleValue());
+		return new Vector3d(x, y, z);
 	}
 
 	public Vector3i toVector3i() {
@@ -326,22 +321,62 @@ public class Loc implements Cloneable {
 		return this;
 	}
 
+//	@Override
+//	public boolean equals(Object obj) {
+//		if (obj == this)
+//			return true;
+//
+//		if (obj instanceof Loc) {
+//			Loc l = (Loc) obj;
+//			return world.equals(l.world) && this.getBlockX() == l.getBlockX() && this.getBlockY() == l.getBlockY()
+//					&& this.getBlockZ() == l.getBlockZ();
+//		} else if (obj instanceof Location) {
+//			Location l = (Location) obj;
+//			return world.equals(l.getWorld().getName()) && this.getBlockX() == l.getBlockX()
+//					&& this.getBlockY() == l.getBlockY() && this.getBlockZ() == l.getBlockZ();
+//		}
+//
+//		return false;
+//	}
+	
 	@Override
-	public boolean equals(Object obj) {
-		if (obj == this)
+	public boolean equals ( Object obj ) {
+		if ( obj == this ) {
 			return true;
-
-		if (obj instanceof Loc) {
-			Loc l = (Loc) obj;
-			return world.equals(l.world) && this.getBlockX() == l.getBlockX() && this.getBlockY() == l.getBlockY()
-					&& this.getBlockZ() == l.getBlockZ();
-		} else if (obj instanceof Location) {
-			Location l = (Location) obj;
-			return world.equals(l.getWorld().getName()) && this.getBlockX() == l.getBlockX()
-					&& this.getBlockY() == l.getBlockY() && this.getBlockZ() == l.getBlockZ();
+		} else {
+			if ( obj instanceof Loc ) {
+				Loc other = (Loc) obj;
+				return Objects.equals ( world , other.world ) 
+						&& getBlockX ( ) == other.getBlockX ( )
+						&& getBlockY ( ) == other.getBlockY ( )
+						&& getBlockZ ( ) == other.getBlockZ ( );
+			} else if ( obj instanceof Location ) {
+				Location other = (Location) obj;
+				return Objects.equals ( world , other.getWorld ( ).getName ( ) ) 
+						&& getBlockX ( ) == other.getBlockX ( )
+						&& getBlockY ( ) == other.getBlockY ( )
+						&& getBlockZ ( ) == other.getBlockZ ( );
+			}
+			return false;
 		}
-
-		return false;
+	}
+	
+	@Override
+	public int hashCode ( ) {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((direction == null) ? 0 : direction.hashCode());
+		result = prime * result + Float.floatToIntBits(pitch);
+		result = prime * result + ((world == null) ? 0 : world.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(x);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(y);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + Float.floatToIntBits(yaw);
+		temp = Double.doubleToLongBits(z);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
 	}
 
 	/**
@@ -353,9 +388,9 @@ public class Loc implements Cloneable {
 	public int saveToConfig(ConfigurationSection section) {
 		int save = 0;
 		save += YmlUtils.setNotEqual(section, "World", world);
-		save += YmlUtils.setNotEqual(section, "X", x.doubleValue());
-		save += YmlUtils.setNotEqual(section, "Y", y.doubleValue());
-		save += YmlUtils.setNotEqual(section, "Z", z.doubleValue());
+		save += YmlUtils.setNotEqual(section, "X", x);
+		save += YmlUtils.setNotEqual(section, "Y", y);
+		save += YmlUtils.setNotEqual(section, "Z", z);
 		save += YmlUtils.setNotEqual(section, "Pitch", (double) pitch);
 		save += YmlUtils.setNotEqual(section, "Yaw",   (double) yaw);
 		save += (direction != null ? YmlUtils.setNotSet(section, "FaceDirection", direction.name()) : 0);
@@ -371,9 +406,9 @@ public class Loc implements Cloneable {
 	public int saveToConfig(ConfigurationSection section, boolean saveWorld, boolean savePitch, boolean saveYaw) {
 		int save = 0;
 		save += saveWorld ? YmlUtils.setNotEqual(section, "World", world) : 0;
-		save += YmlUtils.setNotEqual(section, "X", x.doubleValue());
-		save += YmlUtils.setNotEqual(section, "Y", y.doubleValue());
-		save += YmlUtils.setNotEqual(section, "Z", z.doubleValue());
+		save += YmlUtils.setNotEqual(section, "X", x);
+		save += YmlUtils.setNotEqual(section, "Y", y);
+		save += YmlUtils.setNotEqual(section, "Z", z);
 		save += savePitch ? YmlUtils.setNotEqual(section, "Pitch", (double) pitch) : 0;
 		save += saveYaw ? YmlUtils.setNotEqual(section, "Yaw",   (double) yaw) : 0;
 		save += (direction != null ? YmlUtils.setNotSet(section, "FaceDirection", direction.name()) : 0);

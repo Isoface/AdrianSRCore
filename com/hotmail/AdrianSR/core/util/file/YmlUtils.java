@@ -10,12 +10,13 @@ import org.bukkit.configuration.ConfigurationSection;
 
 public final class YmlUtils {
 
-	public static int setNotSet(ConfigurationSection section, String key, Object value) {
-		if (!section.isSet(key)) {
-			section.set(key, value);
+	public static int setNotSet ( ConfigurationSection section , String key , Object value ) {
+		if ( section.isSet ( key ) ) {
+			return 0;
+		} else {
+			section.set ( key , value );
 			return 1;
 		}
-		return 0;
 	}
 	
 	public static int setNotEqual(ConfigurationSection section, String key, Object update) {
