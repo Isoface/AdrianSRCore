@@ -1,35 +1,45 @@
-package com.hotmail.AdrianSR.core.menu.item;
+package com.hotmail.adriansr.core.menu.item;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang.Validate;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import com.hotmail.AdrianSR.core.menu.action.ItemClickAction;
-import com.hotmail.AdrianSR.core.util.TextUtils;
-import com.hotmail.AdrianSR.core.util.itemstack.ItemMetaBuilder;
-import com.hotmail.AdrianSR.core.util.itemstack.ItemStackUtils;
-import com.hotmail.AdrianSR.core.util.material.MaterialUtils;
+import com.hotmail.adriansr.core.menu.action.ItemClickAction;
+import com.hotmail.adriansr.core.util.StringUtil;
+import com.hotmail.adriansr.core.util.itemstack.ItemMetaBuilder;
+import com.hotmail.adriansr.core.util.itemstack.ItemStackUtil;
+import com.hotmail.adriansr.core.util.material.MaterialUtils;
 
 public abstract class Item {
 
-	protected String       name;
-	protected ItemStack    icon;
-	protected List<String> lore;
+	protected String          name;
+	protected ItemStack       icon;
+	protected List < String > lore;
 
-	public Item(String name, ItemStack icon, String... lore) {
+	public Item ( String name , ItemStack icon , Collection < String > lore ) {
 		Validate.notNull(icon, "The icon cannot be null!");
-		this.name = TextUtils.getNotNull(name, "null name");
+		this.name = name == null ? "" : name;
 		this.icon = icon;
-		this.lore = Arrays.asList(lore != null ? lore : new String[0]);
+		this.lore = new ArrayList < > ( lore );
+	}
+	
+	public Item ( String name , ItemStack icon , String... lore ) {
+		Validate.notNull(icon, "The icon cannot be null!");
+		this.name = name == null ? "" : name;
+		this.icon = icon;
+		this.lore = Arrays.asList ( lore );
 	}
 	
 	public Item(ItemStack icon) {
-		this(TextUtils.getNotNull((icon.getItemMeta() != null ? icon.getItemMeta().getDisplayName() : null), "null name"),
+		this(StringUtil.defaultIfBlank ((icon.getItemMeta() != null ? icon.getItemMeta().getDisplayName() : null), "null name"),
 				icon,
-			( ItemStackUtils.extractLore(icon, false).toArray(new String[ItemStackUtils.extractLore(icon, false).size()]) ) );
+			( ItemStackUtil.extractLore(icon, false).toArray(new String[ItemStackUtil.extractLore(icon, false).size()]) ) );
+		
 	}
 
 	public String getName() {
@@ -41,9 +51,9 @@ public abstract class Item {
 	}
 
 	public ItemStack getDisplayIcon() {
-		return new ItemMetaBuilder(MaterialUtils.getRightMaterial(getIcon()))
-				.withDisplayName(TextUtils.translateColors(getName()))
-				.withLore(getLore()).applyTo(getIcon().clone());
+		return ( getIcon().getType() == Material.AIR ? icon : new ItemMetaBuilder(MaterialUtils.getRightMaterial(getIcon()))
+				.withDisplayName(StringUtil.translateAlternateColorCodes(getName()))
+				.withLore(getLore()).applyTo(getIcon().clone()) );
 	}
 
 	public List<String> getLore() {

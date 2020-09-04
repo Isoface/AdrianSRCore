@@ -1,12 +1,13 @@
-package com.hotmail.AdrianSR.core.util.itemstack.safe;
+package com.hotmail.adriansr.core.util.itemstack.safe;
 
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
-import com.hotmail.AdrianSR.core.util.itemstack.custom.CustomItemStack;
-import com.hotmail.AdrianSR.core.util.material.MaterialUtils;
+import com.hotmail.adriansr.core.util.itemstack.custom.CustomItemStack;
+import com.hotmail.adriansr.core.util.material.MaterialUtils;
 
 /**
- * A {@link ItemStack} that is safe because uses
+ * A {@link ItemStack} that is safe because of uses
  * the method {@link MaterialUtils#getRightMaterial(Material)}.
  * <p>
  * @author AdrianSR

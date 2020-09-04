@@ -1,54 +1,52 @@
-package com.hotmail.AdrianSR.core.events;
+package com.hotmail.adriansr.core.events;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 
 /**
- * Represents a Custom Bukkit event.
- * 
- * @author AdrianSR
+ * Simple implementation of {@link Event} that can call itself.
+ * <p>
+ * @author AdrianSR / Monday 13 April, 2020 / 03:40 PM
  */
 public abstract class CustomEvent extends Event {
 
 	/**
-	 * The global events handler list.
-	 */
-	private static final HandlerList HANDLER_LIST = new HandlerList();
-	
-	/**
-	 * Call an {@link Event}.
-	 * 
-	 * @param event the Event.
-	 */
-	public static void callEvent(final Event event) {
-		Bukkit.getPluginManager().callEvent(event);
-	}
-	
-	/**
-	 * Construct a new Bukkit Event.
+	 * The default constructor is defined for cleaner code. This constructor assumes
+	 * the event is synchronous.
 	 */
 	public CustomEvent() {
-		// nothing by default.
+		super ( );
 	}
-	
+
 	/**
-	 * Call this.
+	 * This constructor is used to explicitly declare an event as synchronous or
+	 * asynchronous.
+	 * <p>
+	 * @param async true indicates the event will fire asynchronously, false by
+	 *              default from default constructor
 	 */
-	public CustomEvent call() {
-		callEvent(this);
+	public CustomEvent ( boolean async ) {
+		super ( async );
+	}
+
+	/**
+	 * Calls this event.
+	 * <p>
+	 * This is the same as:
+	 * <pre><code>
+	 * Bukkit.getPluginManager ( ).callEvent ( this );
+	 * </code></pre>
+	 * <p>
+	 * @return this Object, for chaining.
+	 * @throws IllegalStateException thrown when an asynchronous event is fired from
+	 *                               synchronous code.
+	 *                               <p>
+	 *                               <i>Note: This is best-effort basis, and should
+	 *                               not be used to test synchronized state. This is
+	 *                               an indicator for flawed flow logic.</i>
+	 */
+	public CustomEvent call ( ) throws IllegalStateException {
+		Bukkit.getPluginManager ( ).callEvent ( this );
 		return this;
-	}
-	
-	@Override
-	public HandlerList getHandlers() {
-		return HANDLER_LIST;
-	}
-	
-	/**
-	 * @return the Handler list.
-	 */
-	public static HandlerList getHandlerList() {
-		return HANDLER_LIST;
 	}
 }

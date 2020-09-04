@@ -1,9 +1,9 @@
-package com.hotmail.AdrianSR.core.menu.holder;
+package com.hotmail.adriansr.core.menu.holder;
 
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
-import com.hotmail.AdrianSR.core.menu.ItemMenu;
+import com.hotmail.adriansr.core.menu.ItemMenu;
 
 public class ItemMenuHolder implements InventoryHolder {
 	

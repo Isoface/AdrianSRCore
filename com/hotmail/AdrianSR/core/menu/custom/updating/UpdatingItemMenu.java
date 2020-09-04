@@ -1,12 +1,12 @@
-package com.hotmail.AdrianSR.core.menu.custom.updating;
+package com.hotmail.adriansr.core.menu.custom.updating;
 
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 
-import com.hotmail.AdrianSR.core.main.CustomPlugin;
-import com.hotmail.AdrianSR.core.menu.ItemMenu;
-import com.hotmail.AdrianSR.core.menu.custom.updating.handler.UpdatingItemMenuHandler;
-import com.hotmail.AdrianSR.core.menu.item.Item;
-import com.hotmail.AdrianSR.core.menu.size.ItemMenuSize;
+import com.hotmail.adriansr.core.menu.ItemMenu;
+import com.hotmail.adriansr.core.menu.custom.updating.handler.UpdatingItemMenuHandler;
+import com.hotmail.adriansr.core.menu.item.Item;
+import com.hotmail.adriansr.core.menu.size.ItemMenuSize;
 
 public class UpdatingItemMenu extends ItemMenu {
 	
@@ -19,7 +19,7 @@ public class UpdatingItemMenu extends ItemMenu {
 	}
 	
 	@Override
-	public boolean registerListener(CustomPlugin plugin) {
+	public boolean registerListener(Plugin plugin) {
 		if (this.handler == null) {
 			Bukkit.getPluginManager().registerEvents( ( this.handler = new UpdatingItemMenuHandler(this, plugin) ), plugin);
 			return true;

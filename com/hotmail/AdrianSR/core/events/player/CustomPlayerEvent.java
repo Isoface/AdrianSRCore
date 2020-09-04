@@ -1,33 +1,47 @@
-package com.hotmail.AdrianSR.core.events.player;
+package com.hotmail.adriansr.core.events.player;
 
 import org.bukkit.entity.Player;
 
-import com.hotmail.AdrianSR.core.events.CustomEvent;
+import com.hotmail.adriansr.core.events.CustomEvent;
 
 /**
- * Represents a Custom Player event.
+ * A player related event.
  * <p>
- * @author AdrianSR
+ * @author AdrianSR / Monday 13 April, 2020 / 08:08 PM
  */
 public abstract class CustomPlayerEvent extends CustomEvent {
 
-	protected Player player;
+	/**
+	 * The player involved in this event.
+	 */
+	protected final Player player;
 	
 	/**
-	 * Construct a new Player Event.
+	 * Constructing a player event.
 	 * <p>
-	 * @param who the player
+	 * @param player the player involved in this event.
+	 * @param async true indicates the event will fire asynchronously, false by
+	 *              default from default constructor
 	 */
-	public CustomPlayerEvent(Player who) {
-		this.player = who;
+	public CustomPlayerEvent ( Player player , boolean async ) {
+		super ( async ); this.player = player;
 	}
 	
-    /**
-     * Returns the player involved in this event
-     * <p>
-     * @return Player who is involved in this event
-     */
-    public Player getPlayer() {
-        return player;
-    }
+	/**
+	 * Constructing a synchronous player event.
+	 * <p>
+	 * @param player the player involved in this event.
+	 */
+	public CustomPlayerEvent ( final Player player ) {
+		this ( player , false );
+	}
+	
+	/**
+	 * Gets the player involved in this event.
+	 * <p>
+	 * @return the player who is involved in this event.
+	 */
+	public Player getPlayer() {
+		return player;
+	}
 }

@@ -1,6 +1,6 @@
-package com.hotmail.AdrianSR.core.menu.item.action;
+package com.hotmail.adriansr.core.menu.item.action;
 
-import com.hotmail.AdrianSR.core.menu.action.ItemClickAction;
+import com.hotmail.adriansr.core.menu.action.ItemClickAction;
 
 public interface ItemAction {
 

@@ -1,4 +1,4 @@
-package com.hotmail.AdrianSR.core.menu.size;
+package com.hotmail.adriansr.core.menu.size;
 
 import java.util.Arrays;
 

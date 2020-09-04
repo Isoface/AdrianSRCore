@@ -1,4 +1,4 @@
-package com.hotmail.AdrianSR.core.menu.item.action;
+package com.hotmail.adriansr.core.menu.item.action;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -6,8 +6,8 @@ import java.util.Set;
 import org.apache.commons.lang.Validate;
 import org.bukkit.inventory.ItemStack;
 
-import com.hotmail.AdrianSR.core.menu.action.ItemClickAction;
-import com.hotmail.AdrianSR.core.menu.item.Item;
+import com.hotmail.adriansr.core.menu.action.ItemClickAction;
+import com.hotmail.adriansr.core.menu.item.Item;
 
 public class ActionItem extends Item {
 	
@@ -36,7 +36,7 @@ public class ActionItem extends Item {
 	}
 
 	@Override
-	public final void onClick(ItemClickAction action) {
+	public void onClick(ItemClickAction action) {
 		for (int i = ItemActionPriority.values().length - 1; i >= 0; i--) { // call in order, from high to low
 			ItemActionPriority priority = ItemActionPriority.values()[i];
 			actions.stream()

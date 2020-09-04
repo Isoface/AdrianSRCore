@@ -1,4 +1,4 @@
-package com.hotmail.AdrianSR.core.menu;
+package com.hotmail.adriansr.core.menu;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,15 +12,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.plugin.Plugin;
 
-import com.hotmail.AdrianSR.core.main.CustomPlugin;
-import com.hotmail.AdrianSR.core.menu.action.ItemClickAction;
-import com.hotmail.AdrianSR.core.menu.action.ItemMenuClickAction;
-import com.hotmail.AdrianSR.core.menu.handler.ItemMenuHandler;
-import com.hotmail.AdrianSR.core.menu.holder.ItemMenuHolder;
-import com.hotmail.AdrianSR.core.menu.item.Item;
-import com.hotmail.AdrianSR.core.menu.size.ItemMenuSize;
-import com.hotmail.AdrianSR.core.util.TextUtils;
+import com.hotmail.adriansr.core.menu.action.ItemClickAction;
+import com.hotmail.adriansr.core.menu.action.ItemMenuClickAction;
+import com.hotmail.adriansr.core.menu.handler.ItemMenuHandler;
+import com.hotmail.adriansr.core.menu.holder.ItemMenuHolder;
+import com.hotmail.adriansr.core.menu.item.Item;
+import com.hotmail.adriansr.core.menu.size.ItemMenuSize;
+import com.hotmail.adriansr.core.util.StringUtil;
 
 public class ItemMenu {
 	
@@ -34,7 +34,7 @@ public class ItemMenu {
 	
 	public ItemMenu(String title, ItemMenuSize size, ItemMenu parent, Item... contents) {
 		Validate.notNull(size, "The size cannot be null!");
-		this.title    = TextUtils.getNotNull(title, DEFAULT_TITLE);
+		this.title    = StringUtil.defaultIfBlank(title, DEFAULT_TITLE);
 		this.size     = size;
 		this.parent   = parent;
 		this.contents = new Item[size.getSize()]; fill(contents);
@@ -131,16 +131,25 @@ public class ItemMenu {
 		return this.equals(((ItemMenuHolder) player.getOpenInventory().getTopInventory().getHolder()).getItemMenu());
 	}
 	
+	/**
+	 * Sets the title of this menu.
+	 * <p>
+	 * Note that all the Bukkit inventories created from this, must be re-opened to
+	 * see the changes.
+	 * <p>
+	 * @param title new title.
+	 * @return this Object, for chaining.
+	 */
 	public ItemMenu setTitle(String title) {
-		this.title = TextUtils.getNotNull(title, DEFAULT_TITLE);
+		this.title = StringUtil.defaultIfBlank(title, DEFAULT_TITLE);
 		return this;
 	}
 
-	public ItemMenu setSize(ItemMenuSize size) {
-		Validate.notNull(size, "The size cannot be null!");
-		this.size = size;
-		return this;
-	}
+//	public ItemMenu setSize(ItemMenuSize size) {
+//		Validate.notNull(size, "The size cannot be null!");
+//		this.size = size;
+//		return this;
+//	}
 	
 	public ItemMenu setContents(Item[] contents) {
 		fill(contents);
@@ -262,7 +271,7 @@ public class ItemMenu {
 	 * @param plugin the plugin owner of the listener.
 	 * @return true if not already registered.
 	 */
-	public boolean registerListener(CustomPlugin plugin) {
+	public boolean registerListener(Plugin plugin) {
 		if (this.handler == null) {
 			Bukkit.getPluginManager().registerEvents( ( this.handler = new ItemMenuHandler(this, plugin) ), plugin);
 			return true;
@@ -294,7 +303,7 @@ public class ItemMenu {
 	public Inventory open(Player player) {
 		Inventory inventory = apply(
 				Bukkit.createInventory(new ItemMenuHolder(this, Bukkit.createInventory(player, size.getSize())),
-						size.getSize(), TextUtils.getShortenString(TextUtils.translateColors(getTitle()), 32)));
+						size.getSize(), StringUtil.limit(StringUtil.translateAlternateColorCodes(getTitle()), 32)));
 		player.closeInventory();
 		player.openInventory(inventory);
 		return inventory;

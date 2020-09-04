@@ -1,16 +1,23 @@
-package com.hotmail.AdrianSR.core.bossbar;
+package com.hotmail.adriansr.core.bossbar;
 
 /**
- * Represents the BossBars Colors.
+ * An enumeration for the colors the boss bars supports.
  * <p>
- * @author AdrianSR
+ * @author AdrianSR / Tuesday 14 April, 2020 / 09:31 AM
  */
 public enum BarColor {
+	
     PINK,
+    
     BLUE,
+    
     RED,
+    
     GREEN,
+    
     YELLOW,
+    
     PURPLE,
-    WHITE
+    
+    WHITE;
 }

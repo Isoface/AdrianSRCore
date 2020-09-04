@@ -1,4 +1,4 @@
-package com.hotmail.AdrianSR.core.menu.action;
+package com.hotmail.adriansr.core.menu.action;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -9,7 +9,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
-import com.hotmail.AdrianSR.core.menu.ItemMenu;
+import com.hotmail.adriansr.core.menu.ItemMenu;
 
 public class ItemMenuClickAction {
 

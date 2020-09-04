@@ -1,14 +1,14 @@
-package com.hotmail.AdrianSR.core.util.configurable.location;
+package com.hotmail.adriansr.core.util.configurable.location;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 
-import com.hotmail.AdrianSR.core.util.TextUtils;
-import com.hotmail.AdrianSR.core.util.configurable.Configurable;
-import com.hotmail.AdrianSR.core.util.file.YmlUtils;
-import com.hotmail.AdrianSR.core.util.initializable.Initializable;
+import com.hotmail.adriansr.core.util.Initializable;
+import com.hotmail.adriansr.core.util.StringUtil;
+import com.hotmail.adriansr.core.util.configurable.Configurable;
+import com.hotmail.adriansr.core.util.yaml.YamlUtil;
 
 public class ConfigurableLocation extends org.bukkit.Location implements Configurable, Initializable {
 	
@@ -26,8 +26,8 @@ public class ConfigurableLocation extends org.bukkit.Location implements Configu
 	 * <p>
 	 * Note that this method checks the given configuration section calling {@link #isConfigurableLocation(ConfigurationSection)}.
 	 * <p>
-	 * @param section
-	 * @return
+	 * @param section the section to parse.
+	 * @return the parsed location.
 	 */
 	public static ConfigurableLocation of(ConfigurationSection section) {
 		return ( isConfigurableLocation(section) ? new ConfigurableLocation().load(section) : null );
@@ -60,10 +60,11 @@ public class ConfigurableLocation extends org.bukkit.Location implements Configu
 		return true;
 	}
 	
-	private boolean initialized;
+	/** whether {@link #load(ConfigurationSection)} method has been called */
+	protected boolean initialized;
 
-	public ConfigurableLocation() { // uninitialized
-		super(null, -1D, -1D, -1D, -1F, -1F);
+	public ConfigurableLocation ( ) { // uninitialized
+		super(null, 0, 0, 0, 0, 0);
 	}
 	
 	public ConfigurableLocation(World world, double x, double y, double z, float yaw, float pitch) {
@@ -81,7 +82,7 @@ public class ConfigurableLocation extends org.bukkit.Location implements Configu
 
 	@Override
 	public ConfigurableLocation load(ConfigurationSection section) {
-		this.setWorld(Bukkit.getWorld(TextUtils.getNotNull(section.getString(WORLD_KEY, null), "")));
+		this.setWorld ( Bukkit.getWorld ( StringUtil.defaultIfBlank ( section.getString ( WORLD_KEY , null ) , "" ).replace ( '\\' , '/' ) ) );
 		this.setX(section.getDouble(X_KEY, 0));
 		this.setY(section.getDouble(Y_KEY, 0));
 		this.setZ(section.getDouble(Z_KEY, 0));
@@ -93,12 +94,24 @@ public class ConfigurableLocation extends org.bukkit.Location implements Configu
 	
 	@Override
 	public int save(ConfigurationSection section) {
-		return 	YmlUtils.setNotEqual(section, WORLD_KEY, ( getWorld() != null ? getWorld().getName() : "unknown" ) )
-			+	YmlUtils.setNotEqual(section, X_KEY, getX())
-			+	YmlUtils.setNotEqual(section, Y_KEY, getY())
-			+	YmlUtils.setNotEqual(section, Z_KEY, getZ())
-			+	YmlUtils.setNotEqual(section, YAW_KEY, getYaw())
-			+	YmlUtils.setNotEqual(section, PITCH_KEY, getPitch());
+		return 	(YamlUtil.setNotEqual(section, WORLD_KEY, ( getWorld() != null ? getWorld ( ).getName ( ).replace ( '\\' , '/' ) : "unknown" ) ) ? 1 : 0)
+			+	(YamlUtil.setNotEqual(section, X_KEY, getX()) ? 1 : 0)
+			+	(YamlUtil.setNotEqual(section, Y_KEY, getY()) ? 1 : 0) 
+			+	(YamlUtil.setNotEqual(section, Z_KEY, getZ()) ? 1 : 0) 
+			+	(YamlUtil.setNotEqual(section, YAW_KEY, getYaw()) ? 1 : 0)
+			+	(YamlUtil.setNotEqual(section, PITCH_KEY, getPitch()) ? 1 : 0);
+	}
+	
+	/**
+	 * Gets a clone of this location with the specified {@link World world}.
+	 * <p>
+	 * @param world the new world for the location.
+	 * @return a clone of this location with the specified {@code world}.
+	 */
+	public ConfigurableLocation withWorld ( World world ) {
+		ConfigurableLocation location = clone ( );
+		location.setWorld ( world );
+		return location;
 	}
 	
 	@Override
@@ -114,5 +127,10 @@ public class ConfigurableLocation extends org.bukkit.Location implements Configu
 	@Override
 	public boolean isInvalid() {
 		return !isValid();
+	}
+	
+	@Override
+	public ConfigurableLocation clone ( ) {
+		return (ConfigurableLocation) super.clone ( );
 	}
 }

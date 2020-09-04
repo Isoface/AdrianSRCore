@@ -1,4 +1,4 @@
-package com.hotmail.AdrianSR.core.util.itemstack.wool;
+package com.hotmail.adriansr.core.util.itemstack.wool;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -9,9 +9,9 @@ import org.bukkit.Utility;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 
-import com.hotmail.AdrianSR.core.util.classes.ReflectionUtils;
-import com.hotmail.AdrianSR.core.util.itemstack.ItemStackUtils;
-import com.hotmail.AdrianSR.core.util.itemstack.custom.CustomItemStack;
+import com.hotmail.adriansr.core.util.itemstack.ItemStackUtil;
+import com.hotmail.adriansr.core.util.itemstack.custom.CustomItemStack;
+import com.hotmail.adriansr.core.util.reflection.general.EnumReflection;
 
 /**
  * Represents the item stacks whose type
@@ -64,7 +64,7 @@ import com.hotmail.AdrianSR.core.util.itemstack.custom.CustomItemStack;
     public WoolItemStack(final WoolItemStack stack) throws IllegalArgumentException {
         Validate.notNull(stack, "Cannot copy null stack");
         this.setAmount(stack.getAmount());
-        if (ItemStackUtils.DURABILITY_FIELD_AVAILABLE) {
+        if (ItemStackUtil.AVAILABLE_DURABILITY_FIELD) {
         	super.setDurability(stack.getDurability());
         }
         
@@ -94,10 +94,10 @@ import com.hotmail.AdrianSR.core.util.itemstack.custom.CustomItemStack;
      * <p>
      * @param color the new color.
      */
-    public void setColor(WoolColor color) {
-		Validate.notNull(color, "Color cannot be null");
+    public void setColor ( WoolColor color ) {
+		Validate.notNull ( color , "Color cannot be null" );
 		
-		Material wool_material = ReflectionUtils.getEnumConstant ( Material.class , color.name ( ) + "_WOOL" );
+		Material wool_material = EnumReflection.getEnumConstant ( Material.class , color.name ( ) + "_WOOL" );
 		if ( wool_material == null ) {
 			// we are setting color by changing the durability-
 			rawSetDurability ( color.getShortValue ( ) );
@@ -111,11 +111,10 @@ import com.hotmail.AdrianSR.core.util.itemstack.custom.CustomItemStack;
      * The durability of the wool item stack 
      * cannot be changed manually.
      */
-	private void rawSetDurability(short durability) {
-		if (!ItemStackUtils.DURABILITY_FIELD_AVAILABLE && durability == 0) {
-			return;
+	private void rawSetDurability ( short durability ) {
+		if ( ItemStackUtil.AVAILABLE_DURABILITY_FIELD ) {
+			super.setDurability ( durability );
 		}
-		super.setDurability(durability);
 	}
 	
 	/**

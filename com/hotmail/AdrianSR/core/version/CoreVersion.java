@@ -1,96 +1,93 @@
-package com.hotmail.AdrianSR.core.version;
+package com.hotmail.adriansr.core.version;
 
-import java.util.Arrays;
+import com.hotmail.adriansr.core.main.AdrianSRCore;
 
-import com.hotmail.AdrianSR.core.main.core.AdrianSRCore;
-
+/**
+ * An enumeration for most core versions, that implements some useful methods
+ * for comparing versions.
+ * <p>
+ * @author AdrianSR / Tuesday 14 April, 2020 / 02:07 PM
+ */
 public enum CoreVersion {
 
-	v1_2_0,
-	v1_2_1,
-	v1_2_2,
-	v1_2_3,
-	v1_2_4,
-	v1_2_5,
-	v1_2_6,
-	v1_2_7,
-	v1_2_8,
-	v1_2_9,
-	v1_3_0,
-	;
+	v1_2_0 ( 120 ),
+	v1_2_1 ( 121 ),
+	v1_2_2 ( 122 ),
+	v1_2_3 ( 123 ),
+	v1_2_4 ( 124 ),
+	v1_2_5 ( 125 ),
+	v1_2_6 ( 126 ),
+	v1_2_7 ( 127 ),
+	v1_2_8 ( 128 ),
+	v1_2_9 ( 129 ),
 	
-	private int id;
+	v2_0_0 ( 130 );
 	
-	CoreVersion() {
-		this.id = Integer.valueOf( name().replace("v", "").replace("_", "") );
+	private final int id;
+	
+	private CoreVersion ( int id ) {
+		this.id = id;
 	}
 	
+	/**
+	 * Gets the version of the current running core.
+	 * <p>
+	 * @return the version of this core.
+	 */
+	public static CoreVersion getCoreVersion() {
+		return valueOf ( format ( AdrianSRCore.getInstance().getDescription().getVersion ( ) ) );
+	}
+	
+	private static String format ( String suppose_version ) {
+		return ( "v" + suppose_version.trim().toLowerCase().replace ( "." , "_" ).replace ( "v" , "" ) );
+	}
+	
+	/**
+	 * Gets the version's id.
+	 * <p>
+	 * @return version's id.
+	 */
 	public int getID() {
 		return id;
 	}
 	
 	/**
-	 * Formats the given string.
-	 * Examples:
-	 *  - formatVersionName( "1.3.0" ) = v1_3_0
-	 *  - formatVersionName( "V1.3_0" ) = v1_3_0
+	 * Checks whether this version is older than the provided version.
 	 * <p>
-	 * @param suppose_version the suppose version name.
-	 * @return formatted version name.
+	 * @param other the other version.
+	 * @return true if older.
 	 */
-	public static String formatVersionName(String suppose_version) {
-		return ( "v" + suppose_version.trim().toLowerCase().replace(".", "_").replace("v", "") );
-	}
-	
-	public static CoreVersion of(String name) {
-		return Arrays.stream(values()).filter(v -> v.name().equalsIgnoreCase(name)).findAny().orElse(null);
-	}
-	
-	public static CoreVersion getVersion() {
-		return of(CoreVersion.formatVersionName(AdrianSRCore.getInstance().getDescription().getVersion()));
+	public boolean isOlder ( CoreVersion other ) {
+		return getID() < other.getID();
 	}
 	
 	/**
-	 * Check this version is 
-	 * newer than other.
+	 * Checks whether this version is older than or equals to the provided version.
 	 * <p>
-	 * @param version the version to compare.
-	 * @return true if is newer.
+	 * @param other the other version.
+	 * @return true if older or equals.
 	 */
-	public boolean isNewerThan(CoreVersion version) {
-		return version != null && getID() > version.getID();
+	public boolean isOlderEquals ( CoreVersion other ) {
+		return getID() <= other.getID();
 	}
 	
 	/**
-	 * Check this version is 
-	 * newer or equals than other.
+	 * Checks whether this version is newer than the provided version.
 	 * <p>
-	 * @param version the version to compare.
-	 * @return true if is newer or equals.
+	 * @param other the other version.
+	 * @return true if newer.
 	 */
-	public boolean isNewerEqualsThan(CoreVersion version) {
-		return version != null && getID() >= version.getID();
+	public boolean isNewer ( CoreVersion other ) {
+		return getID() > other.getID();
 	}
 	
 	/**
-	 * Check this version is 
-	 * older than other.
+	 * Checks whether this version is newer than or equals to the provided version.
 	 * <p>
-	 * @param version the version to compare.
-	 * @return true if is older.
+	 * @param other the other version.
+	 * @return true if newer or equals.
 	 */
-	public boolean isOlderThan(CoreVersion version) {
-		return version != null && getID() < version.getID();
-	}
-	
-	/**
-	 * Check this version is 
-	 * older or equals than other.
-	 * <p>
-	 * @param version the version to compare.
-	 * @return true if is older or equals.
-	 */
-	public boolean isOlderEqualsThan(CoreVersion version) {
-		return version != null && getID() <= version.getID();
+	public boolean isNewerEquals ( CoreVersion other ) {
+		return getID() >= other.getID();
 	}
 }

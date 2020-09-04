@@ -1,4 +1,4 @@
-package com.hotmail.AdrianSR.core.menu.handler;
+package com.hotmail.adriansr.core.menu.handler;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -7,19 +7,19 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.server.PluginDisableEvent;
+import org.bukkit.plugin.Plugin;
 
-import com.hotmail.AdrianSR.core.main.CustomPlugin;
-import com.hotmail.AdrianSR.core.menu.ItemMenu;
-import com.hotmail.AdrianSR.core.menu.action.ItemMenuClickAction;
-import com.hotmail.AdrianSR.core.menu.holder.ItemMenuHolder;
-import com.hotmail.AdrianSR.core.util.Schedulers;
+import com.hotmail.adriansr.core.menu.ItemMenu;
+import com.hotmail.adriansr.core.menu.action.ItemMenuClickAction;
+import com.hotmail.adriansr.core.menu.holder.ItemMenuHolder;
+import com.hotmail.adriansr.core.util.scheduler.SchedulerUtil;
 
 public class ItemMenuHandler implements Listener {
 	
 	protected final ItemMenu       menu;
-	protected final CustomPlugin plugin;
+	protected final Plugin plugin;
 
-	public ItemMenuHandler(ItemMenu menu, CustomPlugin plugin) {
+	public ItemMenuHandler(ItemMenu menu, Plugin plugin) {
 		this.menu   = menu;
 		this.plugin = plugin;
 	}
@@ -41,7 +41,7 @@ public class ItemMenuHandler implements Listener {
 	}
 	
 	protected void delayed(Runnable runnable, int delay) {
-		Schedulers.scheduleSync(runnable, delay, plugin);
+		SchedulerUtil.scheduleSyncDelayedTask ( runnable , delay , plugin );
 	}
 	
 	@Deprecated

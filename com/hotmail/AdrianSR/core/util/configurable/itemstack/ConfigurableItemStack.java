@@ -1,4 +1,4 @@
-package com.hotmail.AdrianSR.core.util.configurable.itemstack;
+package com.hotmail.adriansr.core.util.configurable.itemstack;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -10,14 +10,14 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
-import com.hotmail.AdrianSR.core.util.TextUtils;
-import com.hotmail.AdrianSR.core.util.configurable.Configurable;
-import com.hotmail.AdrianSR.core.util.configurable.enchantment.ConfigurableEnchantment;
-import com.hotmail.AdrianSR.core.util.itemstack.ItemMetaBuilder;
-import com.hotmail.AdrianSR.core.util.loadable.LoadableCollectionEntry;
-import com.hotmail.AdrianSR.core.util.material.MaterialUtils;
-import com.hotmail.AdrianSR.core.util.saveable.SaveableCollectionEntry;
-import com.hotmail.AdrianSR.core.util.saveable.SaveableEntry;
+import com.hotmail.adriansr.core.util.StringUtil;
+import com.hotmail.adriansr.core.util.configurable.Configurable;
+import com.hotmail.adriansr.core.util.configurable.enchantment.ConfigurableEnchantment;
+import com.hotmail.adriansr.core.util.itemstack.ItemMetaBuilder;
+import com.hotmail.adriansr.core.util.loadable.LoadableCollectionEntry;
+import com.hotmail.adriansr.core.util.material.MaterialUtils;
+import com.hotmail.adriansr.core.util.saveable.SaveableCollectionEntry;
+import com.hotmail.adriansr.core.util.saveable.SaveableEntry;
 
 public class ConfigurableItemStack implements Configurable {
 	
@@ -53,6 +53,7 @@ public class ConfigurableItemStack implements Configurable {
 	 * <p>
 	 * @param stack the {@link ItemStack} to get the default values.
 	 */
+	@SuppressWarnings("deprecation")
 	public ConfigurableItemStack(ItemStack stack) {
 		this(MaterialUtils.getRightMaterial(stack).name(), stack.getAmount(), stack.getItemMeta().getDisplayName(),
 				stack.getItemMeta().getLore(), stack.getDurability());
@@ -182,6 +183,7 @@ public class ConfigurableItemStack implements Configurable {
 		this.enchants.add(enchantment);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public ItemStack toItemStack() {
 		ItemMetaBuilder builder = new ItemMetaBuilder(MaterialUtils.getRightMaterial(Material.valueOf(getType())));
 		getEnchantments().stream()
@@ -189,8 +191,8 @@ public class ConfigurableItemStack implements Configurable {
 			.forEach(enchantment -> builder
 				.withEnchantment(enchantment.getEnchantment(), enchantment.getEnchantmentLevel()));
 		
-		return builder.withDisplayName(TextUtils.translateColors(getName()))
-				.withLore(TextUtils.translateColors(getLore()))
+		return builder.withDisplayName(StringUtil.translateAlternateColorCodes(getName()))
+				.withLore(StringUtil.translateAlternateColorCodes(getLore()))
 				.applyTo(new ItemStack(MaterialUtils.getRightMaterial(Material.valueOf(getType())), getSize(), getData()));
 	}
 	

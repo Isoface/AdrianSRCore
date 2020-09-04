@@ -1,4 +1,4 @@
-package com.hotmail.AdrianSR.core.util.bungeecord;
+package com.hotmail.adriansr.core.util.bungeecord;
 
 public enum WriteType {
 	

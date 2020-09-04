@@ -1,22 +1,22 @@
-package com.hotmail.AdrianSR.core.menu.item.action.close;
+package com.hotmail.adriansr.core.menu.item.action.close;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import com.hotmail.AdrianSR.core.menu.action.ItemClickAction;
-import com.hotmail.AdrianSR.core.menu.item.action.ActionItem;
-import com.hotmail.AdrianSR.core.menu.item.action.ItemAction;
-import com.hotmail.AdrianSR.core.menu.item.action.ItemActionPriority;
-import com.hotmail.AdrianSR.core.util.classes.ReflectionUtils;
-import com.hotmail.AdrianSR.core.util.itemstack.safe.SafeItemStack;
-import com.hotmail.AdrianSR.core.util.itemstack.stainedglass.StainedGlassColor;
-import com.hotmail.AdrianSR.core.util.itemstack.stainedglass.StainedGlassItemStack;
+import com.hotmail.adriansr.core.menu.action.ItemClickAction;
+import com.hotmail.adriansr.core.menu.item.action.ActionItem;
+import com.hotmail.adriansr.core.menu.item.action.ItemAction;
+import com.hotmail.adriansr.core.menu.item.action.ItemActionPriority;
+import com.hotmail.adriansr.core.util.itemstack.safe.SafeItemStack;
+import com.hotmail.adriansr.core.util.itemstack.stainedglass.StainedGlassColor;
+import com.hotmail.adriansr.core.util.itemstack.stainedglass.StainedGlassItemStack;
+import com.hotmail.adriansr.core.util.reflection.general.EnumReflection;
 
 public class CloseMenuActionItem extends ActionItem {
 	
 	@Deprecated // Compatibility with server versions <= 1.8
-	public static final ItemStack DEFAULT_ICON = ReflectionUtils.getEnumConstant(Material.class, "BARRIER") != null
+	public static final ItemStack DEFAULT_ICON = EnumReflection.getEnumConstant(Material.class, "BARRIER") != null
 			? new SafeItemStack(Material.BARRIER)
 			: new StainedGlassItemStack(StainedGlassColor.RED, true);
 	

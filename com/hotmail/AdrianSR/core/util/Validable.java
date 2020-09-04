@@ -1,8 +1,23 @@
-package com.hotmail.AdrianSR.core.util;
+package com.hotmail.adriansr.core.util;
 
+/**
+ * Simple interface for validating Objects.
+ * <p>
+ * @author AdrianSR / Sunday 22 March, 2020 / 08:16 AM
+ */
 public interface Validable {
-	
-	public boolean isValid();
-	
-	public boolean isInvalid();
+
+	/**
+	 * Gets whether this Object represents a valid instance.
+	 * <p>
+	 * @return true if valid.
+	 */
+	public boolean isValid ( );
+
+	/**
+	 * Gets whether this Object represents an invalid instance.
+	 * <p>
+	 * @return true if invalid.
+	 */
+	public boolean isInvalid ( );
 }

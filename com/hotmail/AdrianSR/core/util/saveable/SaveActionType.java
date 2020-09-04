@@ -1,4 +1,4 @@
-package com.hotmail.AdrianSR.core.util.saveable;
+package com.hotmail.adriansr.core.util.saveable;
 
 import org.bukkit.configuration.ConfigurationSection;
 

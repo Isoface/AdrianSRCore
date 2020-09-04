@@ -1,17 +1,17 @@
-package com.hotmail.AdrianSR.core.menu.custom.updating.handler;
+package com.hotmail.adriansr.core.menu.custom.updating.handler;
 
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 
-import com.hotmail.AdrianSR.core.main.CustomPlugin;
-import com.hotmail.AdrianSR.core.menu.ItemMenu;
-import com.hotmail.AdrianSR.core.menu.handler.ItemMenuHandler;
-import com.hotmail.AdrianSR.core.util.Schedulers;
+import com.hotmail.adriansr.core.menu.ItemMenu;
+import com.hotmail.adriansr.core.menu.handler.ItemMenuHandler;
+import com.hotmail.adriansr.core.util.scheduler.SchedulerUtil;
 
 public class UpdatingItemMenuHandler extends ItemMenuHandler {
 	
 	protected BukkitTask updater_task;
 
-	public UpdatingItemMenuHandler(ItemMenu menu, CustomPlugin plugin) {
+	public UpdatingItemMenuHandler(ItemMenu menu, Plugin plugin) {
 		super(menu, plugin);
 	}
 	
@@ -23,9 +23,9 @@ public class UpdatingItemMenuHandler extends ItemMenuHandler {
 
 	public void startUpdating(int start_delay, int ticks) {
 		stopUpdating();
-		this.updater_task = Schedulers.syncRepeating(() -> {
+		this.updater_task = SchedulerUtil.runTaskTimer (() -> {
 			this.menu.updateOnlinePlayers();
-		}, start_delay, ticks, plugin);
+		}, start_delay , ticks , plugin );
 	}
 	
 	public void stopUpdating() {

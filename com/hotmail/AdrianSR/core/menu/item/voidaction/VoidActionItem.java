@@ -1,9 +1,9 @@
-package com.hotmail.AdrianSR.core.menu.item.voidaction;
+package com.hotmail.adriansr.core.menu.item.voidaction;
 
 import org.bukkit.inventory.ItemStack;
 
-import com.hotmail.AdrianSR.core.menu.action.ItemClickAction;
-import com.hotmail.AdrianSR.core.menu.item.Item;
+import com.hotmail.adriansr.core.menu.action.ItemClickAction;
+import com.hotmail.adriansr.core.menu.item.Item;
 
 public final class VoidActionItem extends Item {
 

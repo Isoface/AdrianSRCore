@@ -1,23 +1,27 @@
-package com.hotmail.AdrianSR.core.util.material;
+package com.hotmail.adriansr.core.util.material;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
-import com.hotmail.AdrianSR.core.util.classes.ReflectionUtils;
+import com.hotmail.adriansr.core.util.reflection.general.ClassReflection;
 
 @SuppressWarnings("deprecation") public class MaterialUtils {
 	
-	public static final Class<?>              BUKKIT_CLASS = Bukkit.class;
-	public static final Class<?> CRAFT_MAGIC_NUMBERS_CLASS = ReflectionUtils.getCraftBukkitClass("util", "CraftMagicNumbers");
-	public static       Method FROM_LEGACY_DATA_PRIORITY;
+	public static Class<?> CRAFT_MAGIC_NUMBERS_CLASS;
+	public static  Method FROM_LEGACY_DATA_PRIORITY;
 	
 	/* initialize util fields */
 	static {
+		try {
+			CRAFT_MAGIC_NUMBERS_CLASS = ClassReflection.getCraftClass ( "CraftMagicNumbers" , "util" );
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+		
 		try {
 			FROM_LEGACY_DATA_PRIORITY = CRAFT_MAGIC_NUMBERS_CLASS.getMethod("fromLegacy", MaterialData.class,
 					boolean.class);

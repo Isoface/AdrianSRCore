@@ -1,4 +1,4 @@
-package com.hotmail.AdrianSR.core.menu.item.action;
+package com.hotmail.adriansr.core.menu.item.action;
 
 public enum ItemActionPriority {
 

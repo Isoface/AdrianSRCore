@@ -1,4 +1,4 @@
-package com.hotmail.AdrianSR.core.util.loadable;
+package com.hotmail.adriansr.core.util.loadable;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,13 +1,13 @@
-package com.hotmail.AdrianSR.core.menu.custom.book.item;
+package com.hotmail.adriansr.core.menu.custom.book.item;
 
 import org.bukkit.inventory.ItemStack;
 
-import com.hotmail.AdrianSR.core.menu.action.ItemClickAction;
-import com.hotmail.AdrianSR.core.menu.custom.book.BookItemMenu;
-import com.hotmail.AdrianSR.core.menu.custom.book.BookPageItemMenu;
-import com.hotmail.AdrianSR.core.menu.item.action.ActionItem;
-import com.hotmail.AdrianSR.core.menu.item.action.ItemAction;
-import com.hotmail.AdrianSR.core.menu.item.action.ItemActionPriority;
+import com.hotmail.adriansr.core.menu.action.ItemClickAction;
+import com.hotmail.adriansr.core.menu.custom.book.BookItemMenu;
+import com.hotmail.adriansr.core.menu.custom.book.BookPageItemMenu;
+import com.hotmail.adriansr.core.menu.item.action.ActionItem;
+import com.hotmail.adriansr.core.menu.item.action.ItemAction;
+import com.hotmail.adriansr.core.menu.item.action.ItemActionPriority;
 
 public class AlternateBookPageActionItem extends ActionItem {
 	

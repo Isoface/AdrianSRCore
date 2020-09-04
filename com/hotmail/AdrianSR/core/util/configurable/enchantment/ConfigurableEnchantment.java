@@ -1,14 +1,14 @@
-package com.hotmail.AdrianSR.core.util.configurable.enchantment;
+package com.hotmail.adriansr.core.util.configurable.enchantment;
 
 import java.util.Arrays;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 
-import com.hotmail.AdrianSR.core.util.configurable.Configurable;
-import com.hotmail.AdrianSR.core.util.loadable.Loadable;
-import com.hotmail.AdrianSR.core.util.loadable.LoadableEntry;
-import com.hotmail.AdrianSR.core.util.saveable.SaveableEntry;
+import com.hotmail.adriansr.core.util.configurable.Configurable;
+import com.hotmail.adriansr.core.util.loadable.Loadable;
+import com.hotmail.adriansr.core.util.loadable.LoadableEntry;
+import com.hotmail.adriansr.core.util.saveable.SaveableEntry;
 
 public class ConfigurableEnchantment implements Configurable {
 	

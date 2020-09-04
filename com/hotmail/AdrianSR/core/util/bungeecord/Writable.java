@@ -1,10 +1,15 @@
-package com.hotmail.AdrianSR.core.util.bungeecord;
+package com.hotmail.adriansr.core.util.bungeecord;
 
 import java.io.DataOutput;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/**
+ * Class for writing plugin messages.
+ * <p>
+ * @author AdrianSR / Thursday 16 April, 2020 / 12:02 PM
+ */
 public final class Writable {
 
 	public static Writable of(Object to_write) {

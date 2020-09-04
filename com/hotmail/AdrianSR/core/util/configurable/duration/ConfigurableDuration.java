@@ -1,14 +1,13 @@
-package com.hotmail.AdrianSR.core.util.configurable.duration;
+package com.hotmail.adriansr.core.util.configurable.duration;
 
 import java.util.concurrent.TimeUnit;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import com.hotmail.AdrianSR.core.util.classes.ReflectionUtils;
-import com.hotmail.AdrianSR.core.util.file.YmlUtils;
-import com.hotmail.AdrianSR.core.util.loadable.Loadable;
-import com.hotmail.AdrianSR.core.util.saveable.Saveable;
-import com.hotmail.AdrianSR.core.util.time.Duration;
+import com.hotmail.adriansr.core.util.Duration;
+import com.hotmail.adriansr.core.util.configurable.Configurable;
+import com.hotmail.adriansr.core.util.reflection.general.EnumReflection;
+import com.hotmail.adriansr.core.util.yaml.YamlUtil;
 
 /**
  * Represents a {@link Duration} that is 'Configurable'
@@ -16,7 +15,7 @@ import com.hotmail.AdrianSR.core.util.time.Duration;
  * <p>
  * @author AdrianSR
  */
-public class ConfigurableDuration extends Duration implements Loadable, Saveable {
+public class ConfigurableDuration extends Duration implements Configurable {
 	
 	public static final String DURATION_KEY = "duration";
 	public static final String     UNIT_KEY = "unit";
@@ -63,7 +62,7 @@ public class ConfigurableDuration extends Duration implements Loadable, Saveable
 	@Override
 	public ConfigurableDuration load(ConfigurationSection section) {
 		this.duration = section.getLong(DURATION_KEY, -1L);
-		this.unit     = ReflectionUtils.getEnumConstant(TimeUnit.class, section.getString(UNIT_KEY, null));
+		this.unit     = EnumReflection.getEnumConstant(TimeUnit.class, section.getString(UNIT_KEY, null));
 		return this;
 	}
 	
@@ -78,8 +77,8 @@ public class ConfigurableDuration extends Duration implements Loadable, Saveable
 	}
 
 	@Override
-	public int save(ConfigurationSection section) {
-		return YmlUtils.setNotEqual(section, DURATION_KEY, this.getDuration())
-				+ (this.getUnit() != null ? YmlUtils.setNotEqual(section, UNIT_KEY, this.getUnit().name()) : 0);
+	public int save ( ConfigurationSection section ) {
+		return ( YamlUtil.setNotEqual ( section , DURATION_KEY, getDuration ( ) ) ? 1 : 0 )
+				+ ( YamlUtil.setNotEqual ( section, UNIT_KEY, getUnit ( ).name ( ) ) ? 1 : 0 );
 	}
 }

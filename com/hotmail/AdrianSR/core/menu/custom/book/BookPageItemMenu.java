@@ -1,15 +1,15 @@
-package com.hotmail.AdrianSR.core.menu.custom.book;
+package com.hotmail.adriansr.core.menu.custom.book;
 
 import java.util.Arrays;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-import com.hotmail.AdrianSR.core.menu.ItemMenu;
-import com.hotmail.AdrianSR.core.menu.action.ItemClickAction;
-import com.hotmail.AdrianSR.core.menu.action.ItemMenuClickAction;
-import com.hotmail.AdrianSR.core.menu.item.Item;
-import com.hotmail.AdrianSR.core.menu.size.ItemMenuSize;
+import com.hotmail.adriansr.core.menu.ItemMenu;
+import com.hotmail.adriansr.core.menu.action.ItemClickAction;
+import com.hotmail.adriansr.core.menu.action.ItemMenuClickAction;
+import com.hotmail.adriansr.core.menu.item.Item;
+import com.hotmail.adriansr.core.menu.size.ItemMenuSize;
 
 public class BookPageItemMenu extends ItemMenu {
 	
@@ -95,10 +95,10 @@ public class BookPageItemMenu extends ItemMenu {
 		return this;
 	}
 	
-	@Override @Deprecated
-	public final BookPageItemMenu setSize(ItemMenuSize size) {
-		return this;
-	}
+//	@Override @Deprecated
+//	public final BookPageItemMenu setSize(ItemMenuSize size) {
+//		return this;
+//	}
 	
 	@Override
 	public Inventory open(Player player) {

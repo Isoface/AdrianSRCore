@@ -1,4 +1,4 @@
-package com.hotmail.AdrianSR.core.util.loadable;
+package com.hotmail.adriansr.core.util.loadable;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -10,12 +10,12 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 
-import com.hotmail.AdrianSR.core.util.Validable;
-import com.hotmail.AdrianSR.core.util.classes.DataType;
-import com.hotmail.AdrianSR.core.util.classes.ReflectionUtils;
+import com.hotmail.adriansr.core.util.Validable;
+import com.hotmail.adriansr.core.util.reflection.DataType;
+import com.hotmail.adriansr.core.util.reflection.general.FieldReflection;
 
 /**
- * Represents the classes that can be saved on a {@link ConfigurationSection}.
+ * Represents the classes that can be loaded from a {@link ConfigurationSection}.
  * <p>
  * @apiNote Every single class that implements this interface must to have an
  *          empty constructor whose will act as 'uninitialized constructor',
@@ -97,7 +97,11 @@ public interface Loadable extends Validable {
 				if (getted != null) {
 					if (entry.getType().isAssignableFrom(getted.getClass())
 							|| DataType.fromClass(entry.getType()) == DataType.fromClass(getted.getClass())) {
-						ReflectionUtils.setField(this, entry.getName(), getted);
+						try {
+							FieldReflection.setValue(this, entry.getName(), getted);
+						} catch (SecurityException | NoSuchFieldException | IllegalAccessException e) {
+							throw new IllegalStateException ( "cannot load the value to the field '" + entry.getName ( ) + "'" );
+						}
 					}
 				}
 			} else if (entry.isAnnotationPresent(LoadableCollectionEntry.class)) {
@@ -106,7 +110,14 @@ public interface Loadable extends Validable {
 							+ "' is not a valid instance of '" + Collection.class.getName() + "'!");
 				}
 				
-				Object value = ReflectionUtils.getField(this, entry.getName());
+				Object value = null;
+				try {
+					value = FieldReflection.getValue(this, entry.getName());
+				} catch (SecurityException | NoSuchFieldException | IllegalArgumentException
+						| IllegalAccessException e1) {
+					throw new IllegalStateException ( "cannot get the value of the field '" + entry.getName ( ) + "'" );
+				}
+				
 				if (value == null) {
 					throw new UnsupportedOperationException(
 							"The loadable collection entry '" + entry.getName() + "' must be already initialized!");
@@ -114,12 +125,12 @@ public interface Loadable extends Validable {
 
 				Collection<Loadable> collection = ((Collection<Loadable>) value);
 				LoadableCollectionEntry options = entry.getAnnotation(LoadableCollectionEntry.class);
-				if (!Loadable.class.isAssignableFrom(ReflectionUtils.getParameterizedTypesClasses(entry)[0])) {
+				if (!Loadable.class.isAssignableFrom(FieldReflection.getParameterizedTypesClasses(entry)[0])) {
 					throw new UnsupportedOperationException("The elements type of the loadable collection entry '"
 							+ entry.getName() + "' must be of the type '" + Loadable.class.getName() + "'!");
 				}
 
-				Class<? extends Loadable> element_type = (Class<? extends Loadable>) ReflectionUtils
+				Class<? extends Loadable> element_type = (Class<? extends Loadable>) FieldReflection
 						.getParameterizedTypesClasses(entry)[0];
 				Constructor<?> uninitialized_constructor = null;
 				try {

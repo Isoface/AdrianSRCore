@@ -1,4 +1,4 @@
-package com.hotmail.AdrianSR.core.util.json;
+package com.hotmail.adriansr.core.util.json;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,8 +21,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonWriter;
 import com.google.gson.stream.MalformedJsonException;
-import com.hotmail.AdrianSR.core.util.TextUtils;
-import com.hotmail.AdrianSR.core.util.json.option.JsonOptions;
+import com.hotmail.adriansr.core.util.StringUtil;
 
 public final class Json {
 	
@@ -30,8 +29,8 @@ public final class Json {
 		try {
 			StringBuilder contents = new StringBuilder();
 			BufferedReader  reader = new BufferedReader(new FileReader(json_file));
-			reader.lines().forEach(line -> {
-				contents.append( ( line + TextUtils.LINE_SEPARATOR_CHAR ) );
+			reader.lines ( ).forEach ( line -> {
+				contents.append ( line + StringUtil.LINE_SEPARATOR );
 			});
 			
 			reader.close();
@@ -45,11 +44,11 @@ public final class Json {
 		return load(json_file, true);
 	}
 	
-	public static Json loadFromString(String contents, boolean check_encrypted) {
-		if (check_encrypted) {
-			if (StringEscapeUtils.escapeJava(TextUtils.clearWhitespaces(contents))
-					.equals(TextUtils.clearWhitespaces(contents))) {  // if encrypted
-				contents = new String(Base64.decodeBase64(contents)); // decode!
+	public static Json loadFromString ( String contents , boolean check_encrypted ) {
+		if ( check_encrypted ) {
+			if ( StringEscapeUtils.escapeJava ( StringUtil.deleteWhitespace ( contents ) )
+					.equals ( StringUtil.deleteWhitespace ( contents ) ) ) {  // if encrypted
+				contents = new String ( Base64.decodeBase64 ( contents ) ); // decode!
 			}
 		}
 		

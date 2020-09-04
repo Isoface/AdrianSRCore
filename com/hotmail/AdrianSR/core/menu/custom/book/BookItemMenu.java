@@ -1,4 +1,4 @@
-package com.hotmail.AdrianSR.core.menu.custom.book;
+package com.hotmail.adriansr.core.menu.custom.book;
 
 import java.util.Arrays;
 import java.util.function.Predicate;
@@ -7,12 +7,12 @@ import java.util.stream.Stream;
 import org.apache.commons.lang.Validate;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.plugin.Plugin;
 
-import com.hotmail.AdrianSR.core.main.CustomPlugin;
-import com.hotmail.AdrianSR.core.menu.ItemMenu;
-import com.hotmail.AdrianSR.core.menu.action.ItemMenuClickAction;
-import com.hotmail.AdrianSR.core.menu.item.Item;
-import com.hotmail.AdrianSR.core.menu.size.ItemMenuSize;
+import com.hotmail.adriansr.core.menu.ItemMenu;
+import com.hotmail.adriansr.core.menu.action.ItemMenuClickAction;
+import com.hotmail.adriansr.core.menu.item.Item;
+import com.hotmail.adriansr.core.menu.size.ItemMenuSize;
 
 public class BookItemMenu extends ItemMenu {
 	
@@ -158,10 +158,10 @@ public class BookItemMenu extends ItemMenu {
 		return -1;
 	}
 	
-	@Override @Deprecated
-	public final ItemMenu setSize(ItemMenuSize size) {
-		return null;
-	}
+//	@Override @Deprecated
+//	public final ItemMenu setSize(ItemMenuSize size) {
+//		return null;
+//	}
 	
 	@Override @Deprecated
 	public final ItemMenu setContents(Item[] contents) {
@@ -286,7 +286,7 @@ public class BookItemMenu extends ItemMenu {
 	}
 	
 	public ItemMenu clearContents() {
-		for (int i = 0; i < this.getPagesSize().getSize(); i++) { // clear
+		for (int i = 0; i < this.getPages().length; i++) { // clear
 			BookPageItemMenu page = getPage(i);
 			for (int j = 0; j < page.getContents().length; j++) {
 				page.fillToAll(null);
@@ -319,13 +319,13 @@ public class BookItemMenu extends ItemMenu {
 	}
 	
 	@Override
-	public boolean registerListener(CustomPlugin plugin) {
+	public boolean registerListener(Plugin plugin) {
 		for (int i = 0; i < this.getPages().length; i++) {
 			if (!this.getPage(i).registerListener(plugin)) {
 				return false;
 			}
 		}
-		return true;
+		return super.registerListener(plugin);
 	}
 	
 	@Override
@@ -335,7 +335,7 @@ public class BookItemMenu extends ItemMenu {
 				return false;
 			}
 		}
-		return true;
+		return this.unregisterListener();
 	}
 	
 	@Override

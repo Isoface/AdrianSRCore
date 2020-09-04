@@ -1,4 +1,4 @@
-package com.hotmail.AdrianSR.core.util.itemstack;
+package com.hotmail.adriansr.core.util.itemstack;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.hotmail.AdrianSR.core.util.material.MaterialUtils;
+import com.hotmail.adriansr.core.util.material.MaterialUtils;
 
 public final class ItemMetaBuilder {
 	
@@ -38,6 +38,9 @@ public final class ItemMetaBuilder {
 	public ItemMetaBuilder(Material material) {
 		this.material = MaterialUtils.getRightMaterial(material);
 		this.result   = Bukkit.getItemFactory().getItemMeta(this.material);
+		if (this.result == null) {
+			throw new IllegalArgumentException("Unsupported Material: " + material.name());
+		}
 	}
 	
 	public ItemMetaBuilder withDisplayName(String display_name) {

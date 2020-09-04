@@ -1,4 +1,4 @@
-package com.hotmail.AdrianSR.core.util.saveable;
+package com.hotmail.adriansr.core.util.saveable;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
@@ -7,17 +7,26 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 
-import com.hotmail.AdrianSR.core.util.TextUtils;
-import com.hotmail.AdrianSR.core.util.classes.ReflectionUtils;
-import com.hotmail.AdrianSR.core.util.file.YmlUtils;
+import com.hotmail.adriansr.core.util.StringUtil;
+import com.hotmail.adriansr.core.util.reflection.general.FieldReflection;
+import com.hotmail.adriansr.core.util.yaml.YamlUtil;
 
 /**
- * TODO: Description
+ * Represents an Object that can be saved on a {@link ConfigurationSection}.
+ * <p>
+ * The method {@link #saveEntries(ConfigurationSection)} saves the value of any
+ * field in this instance that has the annotation {@link SaveableEntry}.
  * <p>
  * @author AdrianSR / Sunday 03 November, 2019 / 11:56 AM
  */
 public interface Saveable {
 	
+	/**
+	 * Save this Object on the provided {@link ConfigurationSection}.
+	 * <p>
+	 * @param section the section to save on.
+	 * @return total done changes in the provided section after saving.
+	 */
 	public int save(ConfigurationSection section);
 	
 	/**
@@ -27,7 +36,7 @@ public interface Saveable {
 	 * {@link SaveableEntry}.
 	 * <p>
 	 * @param section the section in which this will be saved.
-	 * @return the number of made changes in the given section after saving.
+	 * @return total done changes in the provided section after saving.
 	 */
 	@SuppressWarnings("unchecked")
 	public default int saveEntries(ConfigurationSection section) {
@@ -35,7 +44,14 @@ public interface Saveable {
 		int      count = 0;
 		Class<?> clazz = getClass();
 		for (Field entry : clazz.getDeclaredFields()) {
-			Object value = ReflectionUtils.getField(this, entry.getName());
+			Object value = null;
+			try {
+				value = FieldReflection.getValue ( this , entry.getName ( ) );
+			} catch ( SecurityException | NoSuchFieldException 
+					| IllegalArgumentException | IllegalAccessException ex ) {
+				throw new IllegalStateException ( "cannot get the value of the field '" + entry.getName ( ) + "'" );
+			}
+			
 			if (value == null) {
 				continue;
 			}
@@ -46,7 +62,7 @@ public interface Saveable {
 				boolean                     saveable = Saveable.class.isAssignableFrom(entry.getType());
 				boolean                    blank_key = StringUtils.isBlank(options.key());
 				ConfigurationSection destiny_section = ( !StringUtils.isBlank(options.subsection())
-														? YmlUtils.createNonExisting(section, options.subsection())
+														? YamlUtil.createNotExisting(section, options.subsection())
 														: section );
 				
 				if ( blank_key && !saveable ) {
@@ -59,10 +75,10 @@ public interface Saveable {
 				} else {
 					switch (options.action()) {
 					case NOT_EQUAL:
-						count += YmlUtils.setNotEqual( destiny_section, options.key(), value );
+						count += YamlUtil.setNotEqual ( destiny_section, options.key(), value ) ? 1 : 0;
 						break;
 					case NOT_SET:
-						count += YmlUtils.setNotSet( destiny_section, options.key(), value );
+						count += YamlUtil.setNotSet ( destiny_section, options.key(), value ) ? 1 : 0;
 						break;
 					case NORMAL:
 					default:
@@ -74,7 +90,7 @@ public interface Saveable {
 			} else if (entry.isAnnotationPresent(SaveableCollectionEntry.class)) {
 				SaveableCollectionEntry options = entry.getAnnotation(SaveableCollectionEntry.class);
 				sub_section                     = !StringUtils.isBlank(options.subsection())
-						? YmlUtils.createNonExisting(section, options.subsection())
+						? YamlUtil.createNotExisting(section, options.subsection())
 						: null;
 				if (sub_section == null) {
 					throw new UnsupportedOperationException(
@@ -86,7 +102,7 @@ public interface Saveable {
 							+ "' is not a valid instance of '" + Collection.class.getName() + "'!");
 				}
 				
-				if (!Saveable.class.isAssignableFrom(ReflectionUtils.getParameterizedTypesClasses(entry)[0])) {
+				if (!Saveable.class.isAssignableFrom(FieldReflection.getParameterizedTypesClasses(entry)[0])) {
 					throw new UnsupportedOperationException(
 							"The elements of the collection of the saveable collection entry " + entry.getName()
 									+ " must be of type '" + Saveable.class.getName() + "'!");
@@ -95,65 +111,10 @@ public interface Saveable {
 				int item_count = 0;
 				for (Saveable item : (Collection<Saveable>) value) {
 					item.save(sub_section.createSection(
-							TextUtils.getNotNull(options.subsectionprefix(), "") + String.valueOf(item_count ++)));
+							StringUtil.defaultIfBlank(options.subsectionprefix(), "") + String.valueOf(item_count ++)));
 				}
 			}
 		}
 		return count;
 	}
-//	public default int saveEntries(ConfigurationSection section) {
-//		int      count = 0;
-//		Class<?> clazz = getClass();
-////		if (clazz.isInterface()) {
-////			throw new UnsupportedOperationException("The Saveable annotations doesn't work on interfaces!");
-////		}
-//		for (Field entry : clazz.getDeclaredFields()) {
-//			Object value = ReflectionUtils.getField(this, entry.getName());
-//			if (!entry.isAnnotationPresent(SaveableEntry.class) || value == null) {
-//				continue;
-//			}
-//			
-//			boolean               collection = Collection.class.isAssignableFrom(entry.getType());
-//			SaveableEntry            options = entry.getAnnotation(SaveableEntry.class);
-//			ConfigurationSection sub_section = !StringUtils.isBlank(options.subsection())
-//					? YmlUtils.createNonExisting(section, options.subsection())
-//					: null;
-//			if (collection) {
-//				if (sub_section == null) {
-//					throw new UnsupportedOperationException(
-//							"The saveable collection entry '" + entry.getName() + "' must have a valid sub-section!");
-//				}
-//				
-//				Collection<?> collection_instance = (Collection<?>) value;
-//				if (collection_instance.isEmpty()) {
-//					continue;
-//				}
-//
-//				int item_count = 0;
-//				for (Object item : collection_instance) {
-//					/* determines if the entry is a collection of Saveable entries */ // item != null && Saveable.class.isAssignableFrom(item.getClass())
-//					if (item != null && Saveable.class.isAssignableFrom(ReflectionUtils.getParameterizedTypesClasses(entry)[0])) { 
-//						((Saveable) item).save(sub_section.createSection(String.valueOf(item_count ++)));
-//						continue;
-//					}
-//					break;
-//				}
-//			} else if (!StringUtils.isBlank(options.key())) {
-//				switch (options.action()) {
-//				case NOT_EQUAL:
-//					count += YmlUtils.setNotEqual( ( sub_section != null ? sub_section : section ) , options.key(), value);
-//					break;
-//				case NOT_SET:
-//					count += YmlUtils.setNotSet( ( sub_section != null ? sub_section : section ), options.key(), value);
-//					break;
-//				case NORMAL:
-//				default:
-//					( sub_section != null ? sub_section : section ).set(options.key(), value);
-//					count ++;
-//					break;
-//				}
-//			}
-//		}
-//		return count;
-//	}
 }

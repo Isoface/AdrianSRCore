@@ -1,4 +1,4 @@
-package com.hotmail.AdrianSR.core.util.itemstack.stainedglass;
+package com.hotmail.adriansr.core.util.itemstack.stainedglass;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -9,9 +9,9 @@ import org.bukkit.Utility;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 
-import com.hotmail.AdrianSR.core.util.UniversalMaterial;
-import com.hotmail.AdrianSR.core.util.itemstack.ItemStackUtils;
-import com.hotmail.AdrianSR.core.util.itemstack.custom.CustomItemStack;
+import com.hotmail.adriansr.core.util.itemstack.ItemStackUtil;
+import com.hotmail.adriansr.core.util.itemstack.custom.CustomItemStack;
+import com.hotmail.adriansr.core.util.material.UniversalMaterial;
 
 /**
  * Represents the item stacks whose type
@@ -90,7 +90,7 @@ import com.hotmail.AdrianSR.core.util.itemstack.custom.CustomItemStack;
     public StainedGlassItemStack(final StainedGlassItemStack stack) throws IllegalArgumentException {
         Validate.notNull(stack, "Cannot copy null stack");
         this.setAmount(stack.getAmount());
-        if (ItemStackUtils.DURABILITY_FIELD_AVAILABLE) {
+        if (ItemStackUtil.AVAILABLE_DURABILITY_FIELD) {
         	super.setDurability(stack.getDurability());
         }
         
@@ -134,7 +134,7 @@ import com.hotmail.AdrianSR.core.util.itemstack.custom.CustomItemStack;
      * cannot be changed manually.
      */
 	private void rawSetDurability(short durability) {
-		if (!ItemStackUtils.DURABILITY_FIELD_AVAILABLE && durability == 0) {
+		if (!ItemStackUtil.AVAILABLE_DURABILITY_FIELD && durability == 0) {
 			return;
 		}
 		super.setDurability(durability);
