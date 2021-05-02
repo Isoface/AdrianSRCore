@@ -1,0 +1,8 @@
+main: 'com.hotmail.adriansr.core.main.AdrianSRCore'
+name: 'AdrianSRCore'
+version: '2.0.1'
+compid: '715'
+author: 'AdrianSR'
+description: 'A core plugin.'
+
+load: STARTUP

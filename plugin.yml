@@ -1,0 +1,8 @@
+main: '@main@'
+name: '@name@'
+version: '@version@'
+compid: '@compid@'
+author: '@author@'
+description: '@description@'
+
+load: STARTUP

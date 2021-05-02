@@ -1,0 +1,133 @@
+plugins {
+	id 'java'
+    id 'java-library'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+project.version = '2.0.1'
+
+def        plugin_main = 'com.hotmail.adriansr.core.main.AdrianSRCore'
+def        plugin_name = 'AdrianSRCore'
+def      plugin_author = 'AdrianSR'
+def plugin_description = 'A core plugin.'
+def     plugin_version = project.version
+def     compilation_id = '0'
+
+repositories {
+    jcenter ( ) // Use jcenter for resolving dependencies.
+    
+	maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
+	maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    mavenLocal ( );
+}
+
+dependencies {
+    // Use JUnit test framework
+    testImplementation 'junit:junit:4.12'
+    
+    // spigot local jars
+    implementation fileTree ( dir: 'D:/Documentos/Librerias' , include: 
+    	[ 
+    		'Spigot 1_14_R1/spigot-1.14.4.jar' ,
+    		'Spigot 1_8_R3/spigot-1.8.8-R0.1-SNAPSHOT-latest.jar' ,
+    		'Spigot 1_8_R2/spigot-1.8.3-R0.1-SNAPSHOT-latest.jar' , 
+    		'Spigot 1_8_R1/spigot-1.8-R0.1-SNAPSHOT-latest.jar'
+    	]  )
+    	
+   // local jar libreries
+    implementation fileTree ( dir: 'D:/Documentos/Librerias' , include: 
+    	[ 
+    		'PermissionsEx-1.23.4.jar' ,
+    		'UltraPermissions.jar' ,
+    		'PowerfulPerms-4.5.2.jar' ,
+    		'LuckPerms-Bukkit-5.1.26.jar'
+    	]  )
+}
+
+task plugin {
+	dependsOn ( 'comp_id' )
+	
+	doLast {
+		File  resources = new File ( sourceSets.main.resources.srcDirs [ 0 ].getAbsolutePath ( ) );
+		File yml_source = project.file ( 'plugin.yml' );
+		File     yml_to = new File ( resources , 'plugin.yml' );
+		
+		if ( yml_to.exists ( ) ) {
+			yml_to.delete ( );
+		} 
+		
+		try {
+			yml_to.createNewFile ( );
+		
+			BufferedReader reader = new BufferedReader ( new FileReader ( yml_source ) );
+			FileWriter     writer = new FileWriter ( yml_to );
+			String           line = null;
+				
+			while ( ( line = reader.readLine ( ) ) != null ) {
+				writer.append ( line
+					.replace ( "@main@" , plugin_main )
+					.replace ( "@name@" , plugin_name )
+					.replace ( "@version@" , plugin_version )
+					.replace ( "@author@" , plugin_author )
+					.replace ( "@description@" , plugin_description )
+					.replace ( "@compid@" , compilation_id ) );
+				writer.append ( '\n' );
+			}
+			
+			reader.close ( );
+			writer.close ( );
+		} catch ( IOException ex ) {
+			ex.printStackTrace ( );
+		}
+	}
+}
+
+task comp_id {
+	File file = project.file ( 'compilation.id' );
+	int    id = 0;
+	
+	// reading id
+	try {
+		if ( file.exists ( ) ) {
+			BufferedReader reader = new BufferedReader ( new FileReader ( file ) );
+			String           line = reader.readLine ( );
+			
+			try {
+				id = Integer.valueOf ( line.trim ( ) );
+				id ++; // increasing id
+			} catch ( NumberFormatException ex_b ) {
+				ex_b.printStackTrace ( );
+			}
+			
+			reader.close ( );
+			
+			// then deleting file
+			file.delete ( );
+		}
+	} catch ( IOException ex ) {
+		ex.printStackTrace ( );
+	}
+	
+	// updating id
+	try {
+		file.createNewFile ( );
+		
+		FileWriter writer = new FileWriter ( file );
+		
+		writer.append ( String.valueOf ( id ) );
+		writer.close ( );
+	} catch ( IOException ex ) {
+		ex.printStackTrace ( );
+	}
+	
+	compilation_id = String.valueOf ( id );
+	
+	// then printing
+	println ( 'compilation #' + compilation_id )
+}
+
+jar {
+	dependsOn ( 'plugin' )
+}
