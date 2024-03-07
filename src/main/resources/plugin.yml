@@ -1,0 +1,12 @@
+name: AdrianSRCore
+version: '${project.version}'
+main: es.outlook.adriansrj.core.main.AdrianSRCore
+description: A plugin that provides useful classes
+load: STARTUP
+author: AdrianSR
+libraries:
+  - com.elmakers.math:exp4j:1.0
+  - com.elmakers.mine.bukkit:EffectLib:9.0
+  - commons-io:commons-io:2.6
+  - xyz.xenondevs:particle:1.6.4
+api-version: 1.13
